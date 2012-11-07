@@ -1,4 +1,4 @@
-#include "header.h"
+#include "harness.h"
 #define MIN_LENGTH 1
 #define MAX_LENGTH 500
 

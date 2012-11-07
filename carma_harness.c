@@ -1,4 +1,4 @@
-#include "header.h"
+#include "harness.h"
 #define MIN_M 1024
 #define MAX_M 1024
 #define MIN_K 1024

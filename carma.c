@@ -1,18 +1,9 @@
-#include "header.h"
+#include "carma.h"
+#include "sejits.h"
 #define MAX_DEPTH 5
 #define SPLIT_M 1
 #define SPLIT_K 2
 #define SPLIT_N 3
-typedef struct {
-  int M, K, m, k, n, CM;
-  double *A, *B, *C;
-} Problem;
-typedef struct {
-  int m, n, CM;
-  double *C;
-} Result;
-#include "sejits.h"
-
 
 int dim_to_split(int m, int k, int n) {
   if (n >= k && n >= m) return SPLIT_N;
