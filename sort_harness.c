@@ -18,7 +18,6 @@ void print(double *A, int length) {
 
 int main(int argc, char **argv) {
   srand48(time(NULL));
-
   int length;
   for (length = MIN_LENGTH; length <= MAX_LENGTH; length++) {
     double *A = (double*) malloc(length * sizeof(double));
@@ -30,13 +29,13 @@ int main(int argc, char **argv) {
     for(i = 0; i < length-1; i++) {
       if (A[i] > A[i+1]) {
         printf("FAILURE: array not sorted\n");
-        exit(0);
+        exit(EXIT_FAILURE);
         break;
       }
     }
-    // printf("SUCCESS: %d\n", length);
 
     free(A);
   }
+  printf("SUCCESS\n");
   return 0;
 }

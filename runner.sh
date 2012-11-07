@@ -12,12 +12,14 @@ elif [ "$1" = "mergesort" ] || [ "$1" = "mergesort.c" ]; then
   icc -mkl -o harness -O3 -ipo -xHOST -no-prec-div -fno-strict-aliasing -fno-omit-frame-pointer sort_harness.c mergesort.c
   echo -e "\e[0;32mrunning mergesort...\e[0m"
 
+elif [ "$1" = "carma" ] || [ "$1" = "carma.c" ]; then
+  icc -mkl -o harness -O3 -ipo -xHOST -no-prec-div -fno-strict-aliasing -fno-omit-frame-pointer carma_harness.c carma.c
+  echo -e "\e[0;32mrunning CARMA...\e[0m"
+
 else
   echo -e "\e[0;31mERROR: Algorithm not found\e[0m"
   exit
 fi
 
 ./harness
-rm harness
-
-echo -e "\e[0;32mCOMPLETED!\e[0m"
+rm -rf harness
