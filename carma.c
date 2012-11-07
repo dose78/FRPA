@@ -3,32 +3,21 @@
 #define SPLIT_M 1
 #define SPLIT_K 2
 #define SPLIT_N 3
-
 typedef struct {
   int M, K, m, k, n, CM;
   double *A, *B, *C;
 } Problem;
-
-typedef struct {
-  Problem* problems;
-  int count;
-} Problems;
-
 typedef struct {
   int m, n, CM;
   double *C;
 } Result;
+#include "sejits.h"
+
 
 int dim_to_split(int m, int k, int n) {
   if (n >= k && n >= m) return SPLIT_N;
   if (m >= k && m >= n) return SPLIT_M;
   return SPLIT_K;
-}
-
-Result base_case(Problem p) {
-  cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,p.m,p.n,p.k,1,p.A,p.M,p.B,p.K,0,p.C,p.CM);
-  Result r = {p.m, p.n, p.CM, p.C};
-  return r;
 }
 
 Problems split(Problem p) {
@@ -102,25 +91,10 @@ int should_run_base_case(Problem problem, int depth) {
   }
 }
 
-Result solve(Problem problem, int depth) {
-  if (should_run_base_case(problem, depth)) {
-    return base_case(problem);
-  }
-
-  Problems subproblems = split(problem);
-  Result* results = malloc(subproblems.count * sizeof(Result));
-
-  int i;
-  for (i = 0; i < subproblems.count; i++) {
-    results[i] = cilk_spawn solve(subproblems.problems[i], depth + 1);
-  }
-  cilk_sync;
-
-  free(subproblems.problems);
-
-  Result result = merge(results);
-  free(results);
-  return result;
+Result base_case(Problem p) {
+  cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,p.m,p.n,p.k,1,p.A,p.M,p.B,p.K,0,p.C,p.CM);
+  Result r = {p.m, p.n, p.CM, p.C};
+  return r;
 }
 
 void multiply(int m, int k, int n, double *A, double *B, double *C) {

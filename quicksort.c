@@ -1,24 +1,14 @@
 #include "header.h"
-
 typedef struct {
   double *A;
   int length;
 } Problem;
-
-typedef struct {
-  Problem* problems;
-  int count;
-} Problems;
-
 typedef struct {
   double *A;
   int length;
 } Result;
+#include "sejits.h"
 
-Result base_case(Problem p) {
-  Result r = {p.A, p.length};
-  return r;
-}
 
 Problems split(Problem p) {
   Problems problems;
@@ -60,25 +50,9 @@ int should_run_base_case(Problem problem, int depth) {
   }
 }
 
-Result solve(Problem problem, int depth) {
-  if (should_run_base_case(problem, depth)) {
-    return base_case(problem);
-  }
-
-  Problems subproblems = split(problem);
-  Result* results = malloc(subproblems.count * sizeof(Result));
-
-  int i;
-  for (i = 0; i < subproblems.count; i++) {
-    results[i] = cilk_spawn solve(subproblems.problems[i], depth + 1);
-  }
-  cilk_sync;
-
-  free(subproblems.problems);
-
-  Result result = merge(results);
-  free(results);
-  return result;
+Result base_case(Problem p) {
+  Result r = {p.A, p.length};
+  return r;
 }
 
 void sort(double *A, int length) {
