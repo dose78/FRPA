@@ -1,14 +1,5 @@
-#include "header.h"
-typedef struct {
-  double *A;
-  int length;
-} Problem;
-typedef struct {
-  double *A;
-  int length;
-} Result;
+#include "mergesort.h"
 #include "sejits.h"
-
 
 Problems split(Problem p) {
   Problems problems;

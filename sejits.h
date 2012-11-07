@@ -1,3 +1,5 @@
+#include "header.h"
+
 typedef struct {
   Problem* problems;
   int count;
