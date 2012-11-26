@@ -18,32 +18,29 @@ Problems split(Problem p) {
 
   int split_dim = dim_to_split(p.m, p.k, p.n);
   if (split_dim == SPLIT_N) {
-    p.n = p.n/2;
     double *B1 = p.B;
-    double *B2 = p.B + p.n * p.K;
-    Problem p1 = {p.M, p.K, p.m, p.k, p.n, p.CM, p.A, B1, p.C};
-    Problem p2 = {p.M, p.K, p.m, p.k, p.n, p.CM, p.A, B2, p.C + p.n * p.CM};
+    double *B2 = p.B + p.n/2 * p.K;
+    Problem p1 = {p.M, p.K, p.m, p.k, p.n/2, p.CM, p.A, B1, p.C};
+    Problem p2 = {p.M, p.K, p.m, p.k, p.n/2, p.CM, p.A, B2, p.C + p.n/2 * p.CM};
     problems.problems[0] = p1;
     problems.problems[1] = p2;
 
   } else if (split_dim == SPLIT_M) {
-    p.m = p.m/2;
     double *A1 = p.A;
-    double *A2 = p.A + p.m;
-    Problem p1 = {p.M, p.K, p.m, p.k, p.n, p.CM, A1, p.B, p.C};
-    Problem p2 = {p.M, p.K, p.m, p.k, p.n, p.CM, A2, p.B, p.C + p.m};
+    double *A2 = p.A + p.m/2;
+    Problem p1 = {p.M, p.K, p.m/2, p.k, p.n, p.CM, A1, p.B, p.C};
+    Problem p2 = {p.M, p.K, p.m/2, p.k, p.n, p.CM, A2, p.B, p.C + p.m/2};
     problems.problems[0] = p1;
     problems.problems[1] = p2;
 
   } else { // SPLIT_K
-    p.k = p.k/2;
     double *A1 = p.A;
-    double *A2 = p.A + p.k * p.M;
+    double *A2 = p.A + p.k/2 * p.M;
     double *B1 = p.B;
-    double *B2 = p.B + p.k;
+    double *B2 = p.B + p.k/2;
     double *Q1 = (double*) malloc(p.m * p.n * sizeof(double));
-    Problem p1 = {p.M, p.K, p.m, p.k, p.n, p.CM, A2, B2, p.C};
-    Problem p2 = {p.M, p.K, p.m, p.k, p.n, p.m, A1, B1, Q1};
+    Problem p1 = {p.M, p.K, p.m, p.k/2, p.n, p.CM, A1, B1, p.C};
+    Problem p2 = {p.M, p.K, p.m, p.k/2, p.n, p.m, A2, B2, Q1};
     problems.problems[0] = p1;
     problems.problems[1] = p2;
   }
