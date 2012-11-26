@@ -1,9 +1,5 @@
 #include "carma.h"
 #include "sejits.h"
-#define MAX_DEPTH 5
-#define SPLIT_M 1
-#define SPLIT_K 2
-#define SPLIT_N 3
 
 int dim_to_split(int m, int k, int n) {
   if (n >= k && n >= m) return SPLIT_N;
@@ -11,41 +7,42 @@ int dim_to_split(int m, int k, int n) {
   return SPLIT_K;
 }
 
-Problems split(Problem p) {
-  Problems problems;
-  problems.problems = malloc(2 * sizeof(Problem));
-  problems.count = 2;
+int get_num_subproblems(Problem p) {
+  return 2;
+}
 
-  int split_dim = dim_to_split(p.m, p.k, p.n);
-  if (split_dim == SPLIT_N) {
-    double *B1 = p.B;
-    double *B2 = p.B + p.n/2 * p.K;
-    Problem p1 = {p.M, p.K, p.m, p.k, p.n/2, p.CM, p.A, B1, p.C};
-    Problem p2 = {p.M, p.K, p.m, p.k, p.n/2, p.CM, p.A, B2, p.C + p.n/2 * p.CM};
-    problems.problems[0] = p1;
-    problems.problems[1] = p2;
+Problem get_next_subproblem(Problem p, Problem* subproblems, int prob_num) {
+  if (prob_num == 0) {
+    int split_dim = dim_to_split(p.m, p.k, p.n);
+    if (split_dim == SPLIT_N) {
+      Problem subproblem1 = {p.M, p.K, p.m, p.k, p.n/2, p.CM, p.A, p.B, p.C};
+      return subproblem1;
+    } else if (split_dim == SPLIT_M) {
+      Problem subproblem1 = {p.M, p.K, p.m/2, p.k, p.n, p.CM, p.A, p.B, p.C};
+      return subproblem1;
+    } else { // SPLIT_K
+      Problem subproblem1 = {p.M, p.K, p.m, p.k/2, p.n, p.CM, p.A, p.B, p.C};
+      return subproblem1;
+    }
 
-  } else if (split_dim == SPLIT_M) {
-    double *A1 = p.A;
-    double *A2 = p.A + p.m/2;
-    Problem p1 = {p.M, p.K, p.m/2, p.k, p.n, p.CM, A1, p.B, p.C};
-    Problem p2 = {p.M, p.K, p.m/2, p.k, p.n, p.CM, A2, p.B, p.C + p.m/2};
-    problems.problems[0] = p1;
-    problems.problems[1] = p2;
-
-  } else { // SPLIT_K
-    double *A1 = p.A;
-    double *A2 = p.A + p.k/2 * p.M;
-    double *B1 = p.B;
-    double *B2 = p.B + p.k/2;
-    double *Q1 = (double*) malloc(p.m * p.n * sizeof(double));
-    Problem p1 = {p.M, p.K, p.m, p.k/2, p.n, p.CM, A1, B1, p.C};
-    Problem p2 = {p.M, p.K, p.m, p.k/2, p.n, p.m, A2, B2, Q1};
-    problems.problems[0] = p1;
-    problems.problems[1] = p2;
+  } else {
+    int split_dim = dim_to_split(p.m, p.k, p.n);
+    if (split_dim == SPLIT_N) {
+      double *B2 = p.B + p.n/2 * p.K;
+      Problem subproblem2 = {p.M, p.K, p.m, p.k, p.n/2, p.CM, p.A, B2, p.C + p.n/2 * p.CM};
+      return subproblem2;
+    } else if (split_dim == SPLIT_M) {
+      double *A2 = p.A + p.m/2;
+      Problem subproblem2 = {p.M, p.K, p.m/2, p.k, p.n, p.CM, A2, p.B, p.C + p.m/2};
+      return subproblem2;
+    } else { // SPLIT_K
+      double *A2 = p.A + p.k/2 * p.M;
+      double *B2 = p.B + p.k/2;
+      double *Q1 = (double*) malloc(p.m * p.n * sizeof(double));
+      Problem subproblem2 = {p.M, p.K, p.m, p.k/2, p.n, p.m, A2, B2, Q1};
+      return subproblem2;
+    }
   }
-
-  return problems;
 }
 
 Result merge(Result* results) {

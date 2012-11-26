@@ -1,29 +1,33 @@
 #include "quicksort.h"
 #include "sejits.h"
 
-Problems split(Problem p) {
-  Problems problems;
-  problems.problems = malloc(2 * sizeof(Problem));
-  problems.count = 2;
+int get_num_subproblems(Problem p) {
+  return 2;
+}
 
-  int length = p.length, i = 0, j = length - 2;
-  double *A = p.A, pivot = A[length - 1], temp;
-  do {
-    while (A[i] < pivot) i++;
-    while (A[j] > pivot && j > 0) j--;
-    if (i < j) {
-      temp = A[i];
-      A[i] = A[j];
-      A[j] = temp;
-    }
-  } while (i < j);
-  A[length - 1] = A[i];
-  A[i] = pivot;
-  Problem p1 = {A, i};
-  Problem p2 = {A + i + 1, length - i - 1};
-  problems.problems[0] = p1;
-  problems.problems[1] = p2;
-  return problems;
+Problem get_next_subproblem(Problem p, Problem* subproblems, int prob_num) {
+  if (prob_num == 0) {
+    int i = 0, j = p.length - 2;
+    double *A = p.A, pivot = A[p.length - 1], temp;
+    do {
+      while (A[i] < pivot) i++;
+      while (A[j] > pivot && j > 0) j--;
+      if (i < j) {
+        temp = A[i];
+        A[i] = A[j];
+        A[j] = temp;
+      }
+    } while (i < j);
+    A[p.length - 1] = A[i];
+    A[i] = pivot;
+    Problem subproblem1 = {A, i};
+    return subproblem1;
+
+  } else {
+    int first_length = subproblems[0].length;
+    Problem subproblem2 = {p.A + first_length + 1, p.length - first_length - 1};
+    return subproblem2;
+  }
 }
 
 Result merge(Result* results) {

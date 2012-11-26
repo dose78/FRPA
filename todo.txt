@@ -1,0 +1,7 @@
+Make it possible to parallelize get_next_subproblem()
+
+Make it possible to return all of the subproblems at once so we don't have to realloc every time?
+
+Do result allocation dynamically?
+
+Make it possible to pass arbitrary state to the next call to get_next_subproblem (e.g. an array of all of the remaining subproblems, etc...)?

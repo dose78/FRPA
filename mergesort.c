@@ -1,16 +1,20 @@
 #include "mergesort.h"
 #include "sejits.h"
 
-Problems split(Problem p) {
-  Problems problems;
-  problems.problems = malloc(2 * sizeof(Problem));
-  problems.count = 2;
-  int midpoint = p.length/2;
-  Problem p1 = {p.A, midpoint};
-  Problem p2 = {p.A + midpoint, midpoint + (p.length % 2)};
-  problems.problems[0] = p1;
-  problems.problems[1] = p2;
-  return problems;
+int get_num_subproblems(Problem p) {
+  return 2;
+}
+
+Problem get_next_subproblem(Problem p, Problem* subproblems, int prob_num) {
+  if (prob_num == 0) {
+    int midpoint = p.length/2;
+    Problem subproblem1 = {p.A, midpoint};
+    return subproblem1;
+  } else {
+    int midpoint = subproblems[0].length;
+    Problem subproblem2 = {p.A + midpoint, midpoint + (p.length % 2)};
+    return subproblem2;
+  }
 }
 
 Result merge(Result* results) {
