@@ -1,9 +1,7 @@
-Array of struct pointers?
-
 Make it possible to parallelize get_next_subproblem()
-
-Make it possible to return all of the subproblems at once so we don't have to realloc every time?
-
-Do result allocation dynamically?
-
 Make it possible to pass arbitrary state to the next call to get_next_subproblem (e.g. an array of all of the remaining subproblems, etc...)?
+
+EXPERIMENTAL
+don't need to allocate Q in DFS CARMA
+merge should free anything that was alloced in split (i.e. subproblems)
+merge should handle final_results = null
