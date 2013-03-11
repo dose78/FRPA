@@ -20,13 +20,13 @@ typedef struct {
 
 // Methods to be implemented
 int should_run_base_case(Problem problem, int depth);
-Result base_case(Problem problem);
+Result base_case(Problem problem, Result prev_result);
 Subproblems get_subproblems(Problem problem, Result final_result, int num_solved, int num_to_generate);
-Result merge(Resutl final_result, Result* results, Subproblems subproblems);
+Result merge(Result final_result, Result* results, Subproblems subproblems);
 
 Result solve(Problem problem, Result prev_result, int depth) {
   if (should_run_base_case(problem, depth)) {
-    return base_case(prev_results, num_prev_results, problem);
+    return base_case(problem, prev_result);
   }
 
   Result final_result = NULL;
