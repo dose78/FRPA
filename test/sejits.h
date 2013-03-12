@@ -40,5 +40,4 @@ void solve(Problem problem, int depth) {
             next_to_merge = problem.merge(num_solved, next_to_merge);
         } while (next_to_merge != DONE_SOLVING)
     }
-    return final_result;
 }
