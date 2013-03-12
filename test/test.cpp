@@ -55,8 +55,9 @@ MultResult solveBase(MultProblem p) {
 }
 
 template <class Problem, class Result>
-Result solve (Problem problem) {
+Result solve (Problem problem, int depth = 5) {
     Result result = solveBase(problem);
+    printf("depth: %d\n", depth);
     return result;
 }
 
@@ -64,7 +65,7 @@ int main () {
     TRSMProblem trsmProb;
     MultProblem multProb;
     TRSMResult trsmResult = solve<TRSMProblem, TRSMResult>(trsmProb);
-    MultResult multResult = solve<MultProblem, MultResult>(multProb);
+    MultResult multResult = solve<MultProblem, MultResult>(multProb, 1);
     trsmResult.printStuff();
     multResult.printStuff();
     return 0;
