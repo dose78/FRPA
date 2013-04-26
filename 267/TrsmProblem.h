@@ -1,14 +1,15 @@
-// #include "Task.h"
+#include "Task.h"
 #include "Problem.h"
 #define MAX_DEPTH 5
 
 class TrsmProblem: public Problem {
-    int n;
-    double *T, *X;
+    int n, N;
+    double *X, *T;
 
 public:
-    TrsmProblem(int n, double *X, double *T);
+    TrsmProblem(double *X, double *T, int n, int N);
     bool shouldRunBaseCase(int depth);
     void runBaseCase();
-    std::vector<Problem*> split();
+    std::vector<Task*> split();
+    void merge(std::vector<Problem*>);
 };

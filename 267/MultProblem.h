@@ -1,14 +1,15 @@
-// #include "Task.h"
+#include "Task.h"
 #include "Problem.h"
 #define MAX_DEPTH 5
 
 class MultProblem: public Problem {
-    int n;
-    double *A, *B;
+    int n, N;
+    double *C, *A, *B;
 
 public:
-    MultProblem(int n, double *A, double *B);
+    MultProblem(double *C, double *A, double *B, int n, int N);
     bool shouldRunBaseCase(int depth);
     void runBaseCase();
-    std::vector<Problem*> split();
+    std::vector<Task*> split();
+    void merge(std::vector<Problem*>);
 };

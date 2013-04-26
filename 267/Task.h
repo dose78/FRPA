@@ -1,10 +1,19 @@
 #include "Problem.h"
 
+#ifndef TASK
+#define TASK
+
 class Task {
-public:
     std::vector<Problem*> problems;
 
-    void addProblem(Problem p) {
+public:
+    void addProblem(Problem* p) {
         problems.push_back(p);
     }
+
+    std::vector<Problem*> getProblems() {
+        return problems;
+    }
 };
+
+#endif

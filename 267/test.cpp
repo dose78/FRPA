@@ -14,7 +14,7 @@ int main() {
     int n = 64;
     double *X = (double*) malloc(n * n * sizeof(double));
     double *T = (double*) malloc(n * n * sizeof(double));
-    TrsmProblem* problem = new TrsmProblem(n, X, T);
+    TrsmProblem* problem = new TrsmProblem(X, T, n, n);
 
     // if (problem->shouldRunBaseCase(1)) {
     //     printf("true\n");
@@ -23,11 +23,15 @@ int main() {
     //     printf("false\n");
     // }
 
-    std::vector<Problem*> subproblems = problem->split();
+    std::vector<Task*> tasks = problem->split();
 
-    for(std::vector<Problem*>::iterator it = subproblems.begin(); it != subproblems.end(); it++) {
-        Problem *p = *it;
-        p->runBaseCase();
+    for(std::vector<Task*>::iterator it = tasks.begin(); it != tasks.end(); it++) {
+        Task *t = *it;
+        std::vector<Problem*> problems = t->getProblems();
+        for(std::vector<Problem*>::iterator it2 = problems.begin(); it2 != problems.end(); it2++) {
+            Problem *p = *it2;
+            p->runBaseCase();
+        }
     }
 
     // for(std::vector<Problem*>::iterator it = subproblems.begin(); it != subproblems.end(); it++) {

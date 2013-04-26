@@ -1,17 +1,15 @@
 #include "MultProblem.h"
 
-MultProblem::MultProblem(int n, double *A, double *B) {
-    this->n = n;
+MultProblem::MultProblem(double *C, double *A, double *B, int n, int N) {
+    this->C = C;
     this->A = A;
     this->B = B;
+    this->n = n;
+    this->N = N;
 }
 
 bool MultProblem::shouldRunBaseCase(int depth) {
-    if (depth >= MAX_DEPTH || n <= 32) {
-        return true;
-    } else {
-        return false;
-    }
+    return true;
 }
 
 void MultProblem::runBaseCase() {
@@ -19,13 +17,11 @@ void MultProblem::runBaseCase() {
     printf("MULT Base Case Ran\n");
 }
 
-std::vector<Problem*> MultProblem::split() {
-    int n = 32;
-    MultProblem* child1 = new MultProblem(n, A, B);
-    MultProblem* child2 = new MultProblem(n, A, B);
+std::vector<Task*> MultProblem::split() {
+    std::vector<Task*> tasks;
+    return tasks;
+}
 
-    std::vector<Problem*> subproblems;
-    subproblems.push_back(child1);
-    subproblems.push_back(child2);
-    return subproblems;
+void MultProblem::merge(std::vector<Problem*>) {
+    printf("MULT Merge\n");
 }
