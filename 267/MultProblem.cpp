@@ -14,7 +14,7 @@ bool MultProblem::shouldRunBaseCase(int depth) {
 
 void MultProblem::runBaseCase() {
     // cblas_dtrsm(CblasColMajor, CblasRight, CblasLower, CblasTrans, CblasNonUnit, n, n, 1.0, T, n, X, n);
-    printf("MULT Base Case Ran\n");
+    printf("MULT %d Base Case Ran\n",n);
 }
 
 std::vector<Task*> MultProblem::split() {

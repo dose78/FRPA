@@ -9,7 +9,7 @@ TrsmProblem::TrsmProblem(double *X, double *T, int n, int N) {
 }
 
 bool TrsmProblem::shouldRunBaseCase(int depth) {
-    if (depth >= MAX_DEPTH || n <= 32) {
+    if (depth >= MAX_DEPTH || n <= 4) {
         return true;
     } else {
         return false;
@@ -18,7 +18,7 @@ bool TrsmProblem::shouldRunBaseCase(int depth) {
 
 void TrsmProblem::runBaseCase() {
     // cblas_dtrsm(CblasColMajor, CblasRight, CblasLower, CblasTrans, CblasNonUnit, n, n, 1.0, T, n, X, n);
-    printf("TRSM Base Case Ran\n");
+    printf("TRSM %d Base Case Ran\n",n);
 }
 
 std::vector<Task*> TrsmProblem::split() {
