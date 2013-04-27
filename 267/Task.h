@@ -7,6 +7,14 @@ class Task {
     std::vector<Problem*> problems;
 
 public:
+    Task() {
+        return;
+    }
+
+    Task(Problem* p) {
+        problems.push_back(p);
+    }
+
     void addProblem(Problem* p) {
         problems.push_back(p);
     }

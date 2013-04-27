@@ -44,9 +44,9 @@ std::vector<Task*> CarmaProblem::split() {
         task2->addProblem(new CarmaProblem(M, K, m, k/2, n, CM, A2, B2, C));
     }
 
-    std::vector<Task*> tasks;
-    tasks.push_back(task1);
-    tasks.push_back(task2);
+    std::vector<Task*> tasks (2);
+    tasks[0] = task1;
+    tasks[1] = task2;
     return tasks;
 }
 
