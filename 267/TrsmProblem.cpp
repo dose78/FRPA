@@ -1,6 +1,5 @@
 #include "TrsmProblem.h"
 #include "MultProblem.h"
-#include <mkl.h>
 
 TrsmProblem::TrsmProblem(double *X, double *T, int n, int N) {
     this->X = X;

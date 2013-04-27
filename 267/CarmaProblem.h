@@ -1,5 +1,7 @@
+#include <mkl.h>
 #include "Task.h"
 #include "Problem.h"
+
 #define SPLIT_M 1
 #define SPLIT_K 2
 #define SPLIT_N 3

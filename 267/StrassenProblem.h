@@ -1,3 +1,4 @@
+#include <mkl.h>
 #include "Task.h"
 #include "Problem.h"
 #define MAX_DEPTH 5
@@ -17,4 +18,3 @@ private:
     void matrix_add(int N, double *A, double *B, double *C);
     void matrix_subtract(int N, double *A, double *B, double *C);
 };
-

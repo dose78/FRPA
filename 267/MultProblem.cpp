@@ -1,5 +1,4 @@
 #include "MultProblem.h"
-#include <mkl.h>
 
 MultProblem::MultProblem(double *C, double *A, double *B, int n, int N) {
     this->C = C;
