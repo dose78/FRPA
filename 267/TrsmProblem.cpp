@@ -1,5 +1,6 @@
 #include "TrsmProblem.h"
 #include "MultProblem.h"
+#include <mkl.h>
 
 TrsmProblem::TrsmProblem(double *X, double *T, int n, int N) {
     this->X = X;
@@ -9,15 +10,20 @@ TrsmProblem::TrsmProblem(double *X, double *T, int n, int N) {
 }
 
 bool TrsmProblem::shouldRunBaseCase(int depth) {
-    if (depth >= MAX_DEPTH || n <= 4) {
-        return true;
-    } else {
+    // if (depth >= MAX_DEPTH || n <= 4) {
+    //     return true;
+    // } else {
+    //     return false;
+    // }
+    if (depth == 0) {
         return false;
+    } else {
+        return true;
     }
 }
 
 void TrsmProblem::runBaseCase() {
-    // cblas_dtrsm(CblasColMajor, CblasRight, CblasLower, CblasTrans, CblasNonUnit, n, n, 1.0, T, n, X, n);
+    cblas_dtrsm(CblasColMajor, CblasRight, CblasLower, CblasTrans, CblasNonUnit, n, n, 1.0, T, N, X, N);
     printf("TRSM %d Base Case Ran\n",n);
 }
 
