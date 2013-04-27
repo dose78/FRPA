@@ -47,9 +47,9 @@ std::vector<Task*> TrsmProblem::split() {
     task2->addProblem(new MultProblem(X22, X21, T21, n/2, N));
     task2->addProblem(new TrsmProblem(X22, T22, n/2, N));
 
-    std::vector<Task*> tasks;
-    tasks.push_back(task1);
-    tasks.push_back(task2);
+    std::vector<Task*> tasks (2);
+    tasks[0] = task1;
+    tasks[1] = task2;
     return tasks;
 }
 

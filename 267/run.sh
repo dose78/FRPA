@@ -22,12 +22,12 @@ elif [ "$1" = "carma" ]; then
     echo -e "\e[0;32mrunning CARMA...\e[0m"
     ./harness 64 262144 64
 
-elif [ "$1" = "strassen" ] || [ "$1" = "strassen.c" ]; then
+elif [ "$1" = "strassen" ]; then
     icc $FLAGS -o harness strassen_harness.cpp StrassenProblem.cpp framework.cpp
     echo -e "\e[0;32mrunning STRASSEN...\e[0m"
-    ./harness
+    ./harness 1024 1024 1024
 
-elif [ "$1" = "trsm" ] || [ "$1" = "trsm.c" ]; then
+elif [ "$1" = "trsm" ]; then
     icc $FLAGS -o harness trsm_harness.cpp TrsmProblem.cpp MultProblem.cpp framework.cpp
     echo -e "\e[0;32mrunning TRSM...\e[0m"
     ./harness

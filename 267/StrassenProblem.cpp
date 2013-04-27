@@ -1,6 +1,6 @@
 #include "StrassenProblem.h"
 
-StrassenProblem::StrassenProblem(int m, int k, int n, double *A, double *B, double *C){
+StrassenProblem::StrassenProblem(int m, int k, int n, double *A, double *B, double *C) {
     this->m = m;
     this->n = n;
     this->k = k;
@@ -10,12 +10,15 @@ StrassenProblem::StrassenProblem(int m, int k, int n, double *A, double *B, doub
 }
 
 bool StrassenProblem::shouldRunBaseCase(int depth) {
-  if (m <= 32 || k <= 32 || n <= 32){
-    return true;
-  }
-  else{
-    return false;
-  }
+    return (depth >= 2);
+/*
+    if (m <= 32 || k <= 32 || n <= 32){
+        return true;
+    }
+    else {
+        return false;
+    }
+*/
 }
 
 void StrassenProblem::runBaseCase() {
@@ -87,29 +90,23 @@ std::vector<Task*> StrassenProblem::split() {
     double *Q5 = (double*) malloc(T_m * S_n * sizeof(double));
     double *Q6 = (double*) malloc(T_m * S_n * sizeof(double));
 
-    Task* task1 = new Task();
-    task1->addProblem(new StrassenProblem(T_m, T_k, S_n, T0, S0, Q0));
-    Task* task2 = new Task();
-    task1->addProblem(new StrassenProblem(T_m, T_k, S_n, T1, S1, Q1));
-    Task* task3 = new Task();
-    task1->addProblem(new StrassenProblem(T_m, T_k, S_n, T2, S2, Q2));
-    Task* task4 = new Task();
-    task1->addProblem(new StrassenProblem(T_m, T_k, S_n, T3, S3, Q3));
-    Task* task5 = new Task();
-    task1->addProblem(new StrassenProblem(T_m, T_k, S_n, T4, S4, Q4));
-    Task* task6 = new Task();
-    task1->addProblem(new StrassenProblem(T_m, T_k, S_n, T5, S5, Q5));
-    Task* task7 = new Task();
-    task1->addProblem(new StrassenProblem(T_m, T_k, S_n, T6, S6, Q6));
+    Task* task1 = new Task(new StrassenProblem(T_m, T_k, S_n, T0, S0, Q0));
+    Task* task2 = new Task(new StrassenProblem(T_m, T_k, S_n, T1, S1, Q1));
+    Task* task3 = new Task(new StrassenProblem(T_m, T_k, S_n, T2, S2, Q2));
+    Task* task4 = new Task(new StrassenProblem(T_m, T_k, S_n, T3, S3, Q3));
+    Task* task5 = new Task(new StrassenProblem(T_m, T_k, S_n, T4, S4, Q4));
+    Task* task6 = new Task(new StrassenProblem(T_m, T_k, S_n, T5, S5, Q5));
+    Task* task7 = new Task(new StrassenProblem(T_m, T_k, S_n, T6, S6, Q6));
 
-    std::vector<Task*> tasks;
-    tasks.push_back(task1);
-    tasks.push_back(task2);
-    tasks.push_back(task3);
-    tasks.push_back(task4);
-    tasks.push_back(task5);
-    tasks.push_back(task6);
-    tasks.push_back(task7);
+    std::vector<Task*> tasks (7);
+    tasks[0] = task1;
+    tasks[1] = task2;
+    tasks[2] = task3;
+    tasks[3] = task4;
+    tasks[4] = task5;
+    tasks[5] = task6;
+    tasks[6] = task7;
+
     return tasks;
 }
 
@@ -145,14 +142,14 @@ void StrassenProblem::merge(std::vector<Problem*> problems) {
     matrix_add(T_m *S_n, Q[0], Q[1], C11);
     matrix_add(T_m *S_n, U3, Q[5], C12);
     matrix_subtract(T_m *S_n, U2, Q[6], C21);
-    matrix_add(T_m*S_n, U2, Q[2], C22);  
+    matrix_add(T_m*S_n, U2, Q[2], C22);
 
     for (i = 0; i < S_n; i++){
         memcpy(C +i * m, C11 + i*T_m, T_m * sizeof(double));
         memcpy(C + (i+S_n) * m, C12 + i*T_m, T_m * sizeof(double));
         memcpy(C +T_m+i * m, C21 + i*T_m, T_m * sizeof(double));
         memcpy(C +T_m+(i+S_n) * m, C22 + i*T_m, T_m * sizeof(double));
-    }      
+    }
 }
 
 
@@ -167,6 +164,6 @@ void StrassenProblem::matrix_subtract(int N, double *A, double *B, double *C) {
     int i,j;
     for (i =0 ; i < N; i++){
         C[i] = A[i] - B[i];
-    
+
     }
 }

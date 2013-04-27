@@ -70,7 +70,7 @@ int main(int argc, char **argv) {
     int k = atoi(argv[2]);
     int n = atoi(argv[3]);
 
-    FILE *f = fopen("data.csv","a");
+    FILE *f = fopen("carma.csv","a");
 
     // discover how many multiplies are needed
     int num_matrices = guess_num_matrices(m, k, n);
@@ -126,7 +126,7 @@ int main(int argc, char **argv) {
     for (int i=0; i<num_matrices; i++) free(C[i]);
     for (int i=0; i<num_matrices; i++) delete problems[i];
     free(cacheClearer);
-    // free(problems);
+    free(problems);
     fclose(f);
     printf("SUCCESS\n");
     return 0;
