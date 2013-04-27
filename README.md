@@ -4,16 +4,16 @@ bash runner.sh <alg>
 ```
 ex:
 ```
-bash runner.sh carma.c
+bash runner.sh carma
 ```
 ```
-bash runner.sh mergesort.c
+bash runner.sh mergesort
 ```
 
 ### Making your own CARDIO algorithm
-*  Add your algorithm, which implements the proper methods (see quicksort.c for a simple example)
-*  Add a running/testing harness for your algorithm (see sort_harness.c for a simple example)
-*  Add a case in runner.sh that will compile your algorithm (see runner.sh for exiting examples)
+*  Add your algorithm, which implements the proper methods (see QuicksortProblem.cpp for a simple example)
+*  Add a running/testing harness for your algorithm (see quicksort_harness.cpp for a simple example)
+*  Add a case in run.sh that will compile your algorithm (see run.sh for exiting examples)
 
 ### Requirements
 You must have Intel Parallel Studio XE installed, which will provide Cilk and MKL.

@@ -4,4 +4,3 @@ Make it possible to pass arbitrary state to the next call to get_next_subproblem
 EXPERIMENTAL
 don't need to allocate Q in DFS CARMA
 merge should free anything that was alloced in split (i.e. subproblems)
-merge should handle final_results = null
