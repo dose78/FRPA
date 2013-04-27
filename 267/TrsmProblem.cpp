@@ -54,7 +54,7 @@ std::vector<Task*> TrsmProblem::split() {
     return tasks;
 }
 
-void TrsmProblem::merge(std::vector<Problem*> problems) {
+void TrsmProblem::merge(std::vector<Problem*> subproblems) {
     printf("TRSM Merge\n");
 }
 

@@ -11,5 +11,5 @@ public:
     bool shouldRunBaseCase(int depth);
     void runBaseCase();
     std::vector<Task*> split();
-    void merge(std::vector<Problem*>);
+    void merge(std::vector<Problem*> subproblems);
 };

@@ -23,6 +23,6 @@ std::vector<Task*> MultProblem::split() {
     return tasks;
 }
 
-void MultProblem::merge(std::vector<Problem*> problems) {
+void MultProblem::merge(std::vector<Problem*> subproblems) {
     printf("MULT Merge\n");
 }
