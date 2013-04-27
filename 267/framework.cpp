@@ -1,12 +1,19 @@
-#include "Framework.h"
+#include "framework.h"
 
 void solve(Problem* problem, int depth);
 
 void solveTask(Task* task, int depth) {
     std::vector<Problem*> problems = task->getProblems();
-    for(std::vector<Problem*>::iterator problemIterator = problems.begin(); problemIterator != problems.end(); problemIterator++) {
-        Problem *subproblem = *problemIterator;
+    for(std::vector<Problem*>::iterator problemIter = problems.begin(); problemIter != problems.end(); problemIter++) {
+        Problem *subproblem = *problemIter;
         solve(subproblem, depth);
+    }
+}
+
+void deleteSubproblems(std::vector<Problem*> subproblems) {
+    for(std::vector<Problem*>::iterator problemIter = subproblems.begin(); problemIter != subproblems.end(); problemIter++) {
+        Problem *subproblem = *problemIter;
+        delete subproblem;
     }
 }
 
@@ -44,7 +51,9 @@ void solve(Problem* problem, int depth) {
             solveTask(task, depth+1);
         }
     }
-    problem->merge(getSubproblemsFromTasks(tasks));
+    std::vector<Problem*> subproblems = getSubproblemsFromTasks(tasks);
+    problem->merge(subproblems);
+    deleteSubproblems(subproblems);
 }
 
 void solve(Problem* problem) {
