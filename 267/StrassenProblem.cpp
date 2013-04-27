@@ -152,7 +152,6 @@ void StrassenProblem::merge(std::vector<Problem*> problems) {
     }
 }
 
-
 void StrassenProblem::matrix_add(int N, double *A, double *B, double *C) {
     int i,j;
     for (i =0 ; i < N; i++){

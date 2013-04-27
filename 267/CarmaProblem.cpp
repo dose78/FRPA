@@ -21,8 +21,8 @@ void CarmaProblem::runBaseCase() {
 }
 
 std::vector<Task*> CarmaProblem::split() {
-    Task* task1 = new Task();
-    Task* task2 = new Task();
+    Task* task1 = new Task(1);
+    Task* task2 = new Task(1);
     int dim = getDimToSplit();
     if (dim == SPLIT_N) {
         double *B1 = B;
