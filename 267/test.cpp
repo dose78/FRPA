@@ -1,6 +1,6 @@
 #include "TrsmProblem.h"
 #include "MultProblem.h"
-#include "Framework.h"
+#include "framework.h"
 #include <mkl.h>
 #include <string.h>
 
