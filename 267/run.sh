@@ -22,9 +22,21 @@ elif [ "$1" = "carma" ]; then
     echo -e "\e[0;32mrunning CARMA...\e[0m"
     ./harness 64 262144 64
 
+elif [ "$1" = "strassen" ] || [ "$1" = "strassen.c" ]; then
+    icc -mkl -o harness -O3 -ipo -xHOST -no-prec-div -fno-strict-aliasing -fno-omit-frame-pointer test_strassen.cpp framework.cpp StrassenProblem.cpp
+    #icc -mkl -o harness  -O3 test_strassen.cpp framework.cpp StrassenProblem.cpp
+    echo -e "\e[0;32mrunning STRASSEN...\e[0m"
+    ./harness 
+
+elif [ "$1" = "trsm" ] || [ "$1" = "trsm.c" ]; then
+    icc -mkl -o trsm -O3 -ipo -xHOST -no-prec-div -fno-strict-aliasing -fno-omit-frame-pointer TrsmProblem.cpp MultProblem.cpp framework.cpp test.cpp
+    echo -e "\e[0;32mrunning TRSM...\e[0m"
+    ./trsm
+
 else
     echo -e "\e[0;31mERROR: Algorithm not found\e[0m"
     exit
 fi
 
 rm -rf harness
+rm -rf trsm
