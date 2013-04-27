@@ -1,6 +1,3 @@
-Make it possible to parallelize get_next_subproblem()
-Make it possible to pass arbitrary state to the next call to get_next_subproblem (e.g. an array of all of the remaining subproblems, etc...)?
-
-EXPERIMENTAL
-don't need to allocate Q in DFS CARMA
-merge should free anything that was alloced in split (i.e. subproblems)
+different split for BFS and DFS?
+    use case: don't need to allocate Q in DFS CARMA
+Make it possible to parallelize get_next_subproblem()?
