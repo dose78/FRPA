@@ -19,7 +19,9 @@ public:
     virtual bool shouldRunBaseCase(int depth) = 0;
     virtual void runBaseCase() = 0;
     virtual std::vector<Task*> split() = 0;
+    virtual std::vector<Problem*> splitSequential();
     virtual void merge(std::vector<Problem*> subproblems) = 0;
+    virtual void mergeSequential(std::vector<Problem*> subproblems);
 };
 
 #endif

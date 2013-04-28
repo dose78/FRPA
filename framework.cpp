@@ -35,24 +35,26 @@ void solve(Problem* problem, int depth) {
         return;
     }
 
-    std::vector<Task*> tasks = problem->split();
-
+    std::vector<Problem*> subproblems;
     // int BFS = depth % 2;
     int BFS = 1;
     if (BFS) {
+        std::vector<Task*> tasks = problem->split();
         for(std::vector<Task*>::iterator taskIterator = tasks.begin(); taskIterator != tasks.end(); taskIterator++) {
             Task *task = *taskIterator;
             cilk_spawn solveTask(task, depth+1);
         }
         cilk_sync;
+        subproblems = getSubproblemsFromTasks(tasks);
+        problem->merge(subproblems);
     } else {
-        for(std::vector<Task*>::iterator taskIterator = tasks.begin(); taskIterator != tasks.end(); taskIterator++) {
-            Task *task = *taskIterator;
-            solveTask(task, depth+1);
+        subproblems = problem->splitSequential();
+        for(std::vector<Problem*>::iterator problemIter = subproblems.begin(); problemIter != subproblems.end(); problemIter++) {
+            Problem *subproblem = *problemIter;
+            solve(subproblem, depth + 1);
         }
+        problem->mergeSequential(subproblems);
     }
-    std::vector<Problem*> subproblems = getSubproblemsFromTasks(tasks);
-    problem->merge(subproblems);
     deleteSubproblems(subproblems);
 }
 
