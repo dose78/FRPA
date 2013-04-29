@@ -1,16 +1,23 @@
 #include "MergesortProblem.h"
 
+int cmp(const void *x, const void *y) {
+    double xx = *(double*)x, yy = *(double*)y;
+    if (xx < yy) return -1;
+    if (xx > yy) return  1;
+    return 0;
+}
+
 MergesortProblem::MergesortProblem(double *A, int length) {
     this->A = A;
     this->length = length;
 }
 
 bool MergesortProblem::shouldRunBaseCase(int depth) {
-    return (length < 2);
+    return (depth >= MAX_DEPTH);
 }
 
 void MergesortProblem::runBaseCase() {
-    return;
+    qsort(A, length, sizeof(double), cmp);
 }
 
 std::vector<Task*> MergesortProblem::split() {
@@ -28,13 +35,16 @@ void MergesortProblem::merge(std::vector<Problem*> subproblems) {
     MergesortProblem* r1 = static_cast<MergesortProblem*>(subproblems[0]);
     MergesortProblem* r2 = static_cast<MergesortProblem*>(subproblems[1]);
 
-    int length = r1->length + r2->length;
+    int r1Length = r1->length;
+    int r2Length = r2->length;
     double *r1A = r1->A;
     double *r2A = r2->A;
     double *merged = (double*) malloc(length * sizeof(double));
     int p1 = 0, p2 = 0, i = 0;
-    while (i < length) {
-        if ( (p1 != r1->length && r1A[p1] <= r2A[p2]) || (p2 == r2->length) ) {
+
+    // merge
+    while (p1 != r1Length && p2 != r2Length) {
+        if (r1A[p1] < r2A[p2]) {
             merged[i] = r1A[p1];
             p1++;
         } else {
@@ -44,6 +54,12 @@ void MergesortProblem::merge(std::vector<Problem*> subproblems) {
         i++;
     }
 
-    memcpy(A, merged, length*sizeof(double));
+    // move leftovers if  p1 did not finish
+    if (p2 == r2Length) {
+        memcpy(A+i, r1A+p1, (length-i) * sizeof(double));
+    }
+
+    memcpy(A, merged, i * sizeof(double));
+
     free(merged);
 }

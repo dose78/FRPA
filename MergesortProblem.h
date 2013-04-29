@@ -1,7 +1,9 @@
 #include "Task.h"
 #include "Problem.h"
+#define MAX_DEPTH 5
 
 class MergesortProblem: public Problem {
+private:
     double *A;
     int length;
 
