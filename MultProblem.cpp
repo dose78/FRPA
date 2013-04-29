@@ -13,8 +13,7 @@ bool MultProblem::shouldRunBaseCase(int depth) {
 }
 
 void MultProblem::runBaseCase() {
-    cblas_dgemm(CblasColMajor,CblasNoTrans,CblasTrans,n,n,n,-1.0,A,N,B,N,0.0,C,N);
-    printf("MULT %d Base Case Ran\n", n);
+    cblas_dgemm(CblasColMajor,CblasNoTrans,CblasTrans,n,n,n,-1.0,A,N,B,N,1.0,C,N);
 }
 
 std::vector<Task*> MultProblem::split() {
@@ -23,5 +22,5 @@ std::vector<Task*> MultProblem::split() {
 }
 
 void MultProblem::merge(std::vector<Problem*> subproblems) {
-    printf("MULT Merge\n");
+    return;
 }
