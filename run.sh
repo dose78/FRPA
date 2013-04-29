@@ -1,7 +1,13 @@
 #!/bin/bash
 
+/reserve/reserve.me
+
 export CILK_NWORKERS=32
 export MKL_NUM_THREADS=1
+
+MIN_K=64
+MAX_K=16777216
+ITERATIONS=5
 
 echo -e "\e[01;34mcompiling...\e[0m"
 
@@ -21,7 +27,19 @@ elif [ "$1" = "mergesort" ]; then
 elif [ "$1" = "carma" ]; then
     icc $FLAGS -o harness  carma_harness.cpp CarmaProblem.cpp $FRAMEWORK
     echo -e "\e[0;32mrunning CARMA...\e[0m"
-    ./harness 64 262144 64
+    # ./harness 64 262144 64
+
+    for (( k=$MIN_K; k<=$MAX_K; k*=2 )); do
+        for (( i=1; i<=$ITERATIONS; i+=1 )); do
+            ./harness 64 $k 64
+        done
+    done
+
+    # for (( n=$MIN_K; n<=$MAX_K; n*=2 )); do
+    #     for (( i=$MIN_K; i<=$ITERATIONS; i+=1 )); do
+    #     ./harness $n $n $n
+    #     done
+    # done
 
 elif [ "$1" = "strassen" ]; then
     icc $FLAGS -o harness strassen_harness.cpp StrassenProblem.cpp $FRAMEWORK
@@ -44,3 +62,5 @@ else
 fi
 
 rm -rf harness
+
+/reserve/unreserve.me
