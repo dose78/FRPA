@@ -30,7 +30,7 @@ elif [ "$1" = "carma" ]; then
     # ./harness 64 262144 64
 
     for (( k=$MIN_K; k<=$MAX_K; k*=2 )); do
-        for (( i=$MIN_K; i<=$ITERATIONS; i+=1 )); do
+        for (( i=1; i<=$ITERATIONS; i+=1 )); do
             ./harness 64 $k 64
         done
     done

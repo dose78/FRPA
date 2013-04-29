@@ -36,9 +36,8 @@ void solve(Problem* problem, int depth) {
     }
 
     std::vector<Problem*> subproblems;
-    // int BFS = depth % 2;
-    int BFS = 1;
-    if (BFS) {
+    int BFS[5] = { 1, 1, 1, 1, 1 };
+    if (BFS[depth]) {
         std::vector<Task*> tasks = problem->split();
         for(std::vector<Task*>::iterator taskIterator = tasks.begin(); taskIterator != tasks.end(); taskIterator++) {
             Task *task = *taskIterator;
