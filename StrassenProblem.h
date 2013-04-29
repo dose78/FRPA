@@ -4,10 +4,9 @@
 #define MAX_DEPTH 5
 
 class StrassenProblem: public Problem {
+public:
     int n, m,k;
     double *A, *B, *C;
-
-public:
     StrassenProblem(int m, int k, int n, double *A, double *B, double *C);
     bool shouldRunBaseCase(int depth);
     void runBaseCase();

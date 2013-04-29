@@ -33,6 +33,11 @@ elif [ "$1" = "trsm" ]; then
     echo -e "\e[0;32mrunning TRSM...\e[0m"
     ./harness
 
+elif [ "$1" = "cholesky" ]; then
+    icc $FLAGS -o harness cholesky_harness.cpp TrsmProblem.cpp MultProblem.cpp CholeskyProblem.cpp SyrkProblem.cpp $FRAMEWORK
+    echo -e "\e[0;32mrunning CHOLESKY...\e[0m"
+    ./harness
+
 else
     echo -e "\e[0;31mERROR: Algorithm not found\e[0m"
     exit

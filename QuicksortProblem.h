@@ -2,10 +2,9 @@
 #include "Problem.h"
 
 class QuicksortProblem: public Problem {
+public:
     double *A;
     int length;
-
-public:
     QuicksortProblem(double *A, int length);
     bool shouldRunBaseCase(int depth);
     void runBaseCase();

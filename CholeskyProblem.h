@@ -3,11 +3,11 @@
 #include "Problem.h"
 #define MAX_DEPTH 5
 
-class TrsmProblem: public Problem {
+class CholeskyProblem: public Problem {
 public:
     int n, N;
-    double *X, *T;
-    TrsmProblem(double *X, double *T, int n, int N);
+    double *A;
+    CholeskyProblem(double *A, int n, int N);
     bool shouldRunBaseCase(int depth);
     void runBaseCase();
     std::vector<Task*> split();

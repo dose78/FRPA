@@ -8,10 +8,9 @@
 #define MAX_DEPTH 5
 
 class CarmaProblem: public Problem {
+public:
     int M, K, m, k, n, CM;
     double *A, *B, *C;
-
-public:
     CarmaProblem(int M, int K, int m, int k, int n, int CM, double *A, double *B, double *C);
     bool shouldRunBaseCase(int depth);
     void runBaseCase();

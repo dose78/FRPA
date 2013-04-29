@@ -3,11 +3,9 @@
 #define MAX_DEPTH 5
 
 class MergesortProblem: public Problem {
-private:
+public:
     double *A;
     int length;
-
-public:
     MergesortProblem(double *A, int length);
     bool shouldRunBaseCase(int depth);
     void runBaseCase();
