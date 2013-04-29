@@ -13,8 +13,13 @@ bool SyrkProblem::shouldRunBaseCase(int depth) {
 }
 
 void SyrkProblem::runBaseCase() {
-    // dsyrk('L', 'N', n, n, -1., A, fulln, 1., C, fulln);
-    printf("SYRK %d Base Case Ran\n",n);
+    cblas_dsyrk(CblasColMajor, CblasLower, CblasNoTrans, n, n, -1.0, A, N, 1.0, C, N);
+
+    // char *Lc = "L";
+    // char *Nc = "N";
+    // const double one = 1.0;
+    // const double negone = -1.0;
+    // dsyrk(Lc, Nc, &n, &n, &negone, A, &N, &one, C, &N);
 }
 
 std::vector<Task*> SyrkProblem::split() {
@@ -53,7 +58,6 @@ std::vector<Task*> SyrkProblem::split() {
 }
 
 void SyrkProblem::merge(std::vector<Problem*> subproblems) {
-    printf("Cholesky Merge\n");
     double* C11 = C;
     double* C12 = C + N*n/2;
     double* C21 = C + n/2;
@@ -82,4 +86,3 @@ void SyrkProblem::merge(std::vector<Problem*> subproblems) {
 }
 
 //TODO: ADD SEQUENTIAL METHODS
-

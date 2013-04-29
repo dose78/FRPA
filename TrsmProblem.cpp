@@ -14,6 +14,13 @@ bool TrsmProblem::shouldRunBaseCase(int depth) {
 
 void TrsmProblem::runBaseCase() {
     cblas_dtrsm(CblasColMajor, CblasRight, CblasLower, CblasTrans, CblasNonUnit, n, n, 1.0, T, N, X, N);
+
+    // char *Rc = "R";
+    // char *Lc = "L";
+    // char *Tc = "T";
+    // char *Nc = "N";
+    // const double one = 1.0;
+    // dtrsm(Rc, Lc, Tc, Nc, &n, &n, &one, T, &N, X, &N);
 }
 
 std::vector<Task*> TrsmProblem::split() {

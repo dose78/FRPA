@@ -24,12 +24,17 @@ int main() {
 
     cblas_dtrsm(CblasColMajor, CblasRight, CblasLower, CblasTrans, CblasNonUnit, n, n, 1.0, T2, n, X2, n);
 
+    // char *Rc = "R";
+    // char *Lc = "L";
+    // char *Tc = "T";
+    // char *Nc = "N";
+    // const double one = 1.0;
+    // dtrsm(Rc, Lc, Tc, Nc, &n, &n, &one, T2, &n, X2, &n);
+
     for(int i = 0; i < n*n; i++) {
         if ((fabs(X[i] - X2[i]) / X[i]) > .001) {
             // printf("X = %f | X2 = %f\n", X[i], X2[i]);
             printf("ERROR: %f\n", fabs((X[i] - X2[i]) / X[i]));
-            // printf("FAILURE\n");
-            // exit(EXIT_FAILURE);
         }
         // printf("X = %f | X2 = %f\n", X[i], X2[i]);
     }

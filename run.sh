@@ -51,6 +51,11 @@ elif [ "$1" = "trsm" ]; then
     echo -e "\e[0;32mrunning TRSM...\e[0m"
     ./harness
 
+elif [ "$1" = "syrk" ]; then
+    icc $FLAGS -o harness syrk_harness.cpp SyrkProblem.cpp MultProblem.cpp $FRAMEWORK
+    echo -e "\e[0;32mrunning SYRK...\e[0m"
+    ./harness
+
 elif [ "$1" = "cholesky" ]; then
     icc $FLAGS -o harness cholesky_harness.cpp TrsmProblem.cpp MultProblem.cpp CholeskyProblem.cpp SyrkProblem.cpp $FRAMEWORK
     echo -e "\e[0;32mrunning CHOLESKY...\e[0m"

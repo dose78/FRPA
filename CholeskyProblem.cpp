@@ -13,8 +13,9 @@ bool CholeskyProblem::shouldRunBaseCase(int depth) {
 }
 
 void CholeskyProblem::runBaseCase() {
-    // dpotrf('L', n, A, fulln, info);
-    printf("Cholesky %d Base Case Ran\n",n);
+    int info;
+    char *Lc = "L";
+    dpotrf(Lc, &n, A, &N, &info);
 }
 
 std::vector<Task*> CholeskyProblem::split() {
@@ -35,7 +36,6 @@ std::vector<Task*> CholeskyProblem::split() {
 }
 
 void CholeskyProblem::merge(std::vector<Problem*> subproblems) {
-    printf("Cholesky Merge\n");
     return;
 }
 
