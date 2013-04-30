@@ -27,7 +27,7 @@ std::vector<Task*> CholeskyProblem::split() {
     Task* task1 = new Task(4);
     task1->addProblem(new CholeskyProblem(A11, n/2, N));
     task1->addProblem(new TrsmProblem(A21, A11, n/2, N));
-    task1->addProblem(new SyrkProblem(A22, A21, n/2, N));
+    task1->addProblem(new SyrkProblem(A22, A21, n/2, N, N));
     task1->addProblem(new CholeskyProblem(A22, n/2, N));
 
     std::vector<Task*> tasks (1);

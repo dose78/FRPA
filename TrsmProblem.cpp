@@ -36,12 +36,12 @@ std::vector<Task*> TrsmProblem::split() {
 
     Task* task1 = new Task(3);
     task1->addProblem(new TrsmProblem(X11, T11, n/2, N));
-    task1->addProblem(new MultProblem(X12, X11, T21, n/2, N));
+    task1->addProblem(new MultProblem(X12, X11, T21, n/2, N, N, N));
     task1->addProblem(new TrsmProblem(X12, T22, n/2, N));
 
     Task* task2 = new Task(3);
     task2->addProblem(new TrsmProblem(X21, T11, n/2, N));
-    task2->addProblem(new MultProblem(X22, X21, T21, n/2, N));
+    task2->addProblem(new MultProblem(X22, X21, T21, n/2, N, N, N));
     task2->addProblem(new TrsmProblem(X22, T22, n/2, N));
 
     std::vector<Task*> tasks (2);

@@ -17,7 +17,7 @@ int main() {
     double *A2 = (double*) malloc(n * n * sizeof(double));
     initialize(C, A, C2, A2, n);
 
-    SyrkProblem* problem = new SyrkProblem(C, A, n, n);
+    SyrkProblem* problem = new SyrkProblem(C, A, n, n, n);
     solve(problem);
 
     cblas_dsyrk(CblasColMajor, CblasLower, CblasNoTrans, n, n, -1.0, A2, n, 1.0, C2, n);
@@ -29,7 +29,7 @@ int main() {
     // dsyrk(Lc, Nc, &n, &n, &negone, A2, &n, &one, C2, &n);
 
     for(int i = 0; i < n*n; i++) {
-        if ((fabs(C[i] - C2[i]) / C[i]) > .01) {
+        if ((fabs(C[i] - C2[i]) / C[i]) > .0000000001) {
             // printf("C = %f | C2 = %f\n", C[i], C2[i]);
             printf("ERROR: %f\n", fabs((C[i] - C2[i]) / C[i]));
             exit(EXIT_FAILURE);

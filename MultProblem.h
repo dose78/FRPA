@@ -6,9 +6,9 @@
 
 class MultProblem: public Problem {
 public:
-    int n, N;
+    int n, ldc, lda, ldb;
     double *C, *A, *B;
-    MultProblem(double *C, double *A, double *B, int n, int N);
+    MultProblem(double *C, double *A, double *B, int n, int ldc, int lda, int ldb);
     bool shouldRunBaseCase(int depth);
     void runBaseCase();
     std::vector<Task*> split();

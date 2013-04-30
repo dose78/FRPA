@@ -163,6 +163,5 @@ void StrassenProblem::matrix_subtract(int N, double *A, double *B, double *C) {
     int i,j;
     for (i =0 ; i < N; i++){
         C[i] = A[i] - B[i];
-
     }
 }

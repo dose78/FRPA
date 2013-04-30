@@ -5,6 +5,8 @@
 void initialize(double *A, double *A2, int n) {
     srand48(time(NULL));
     for(int i = 0; i < n*n; i++) { A[i] = A2[i] = 2 * drand48() - 1; }
+    for(int i = 0; i < n; i++) { A[i + n*i] += 2*n; }
+    for(int i = 0; i < n; i++) { A2[i + n*i] += 2*n; }
 }
 
 int main() {
@@ -20,6 +22,7 @@ int main() {
     int info;
     char *Lc = "L";
     dpotrf(Lc, &n, A2, &n, &info);
+    printf("info: %d\n", info);
 
     for(int i = 0; i < n*n; i++) {
         if ((fabs(A[i] - A2[i]) / A[i]) > .01) {

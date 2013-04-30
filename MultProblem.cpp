@@ -1,11 +1,13 @@
 #include "MultProblem.h"
 
-MultProblem::MultProblem(double *C, double *A, double *B, int n, int N) {
+MultProblem::MultProblem(double *C, double *A, double *B, int n, int ldc, int lda, int ldb) {
     this->C = C;
     this->A = A;
     this->B = B;
     this->n = n;
-    this->N = N;
+    this->ldc = ldc;
+    this->lda = lda;
+    this->ldb = ldb;
 }
 
 bool MultProblem::shouldRunBaseCase(int depth) {
@@ -13,7 +15,7 @@ bool MultProblem::shouldRunBaseCase(int depth) {
 }
 
 void MultProblem::runBaseCase() {
-    cblas_dgemm(CblasColMajor,CblasNoTrans,CblasTrans,n,n,n,-1.0,A,N,B,N,1.0,C,N);
+    cblas_dgemm(CblasColMajor,CblasNoTrans,CblasTrans,n,n,n,-1.0,A,lda,B,ldb,1.0,C,ldc);
 }
 
 std::vector<Task*> MultProblem::split() {
