@@ -1,3 +1,0 @@
-different split for BFS and DFS?
-    use case: don't need to allocate Q in DFS CARMA
-Make it possible to parallelize get_next_subproblem()?

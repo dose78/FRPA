@@ -93,8 +93,8 @@ int main(int argc, char **argv) {
     clearCache(cacheClearer); // clear cache
     gettimeofday(&start, NULL);
     for (int i = 0; i < num_matrices; i++) {
-        solve(problems[i]);
-        // cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans, m,n,k, -1, A[0],m, B[0],k, 1, C[0],m);
+        // solve(problems[i]);
+        cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans, m,n,k, -1, A[0],m, B[0],k, 1, C[0],m);
     }
     gettimeofday(&end, NULL);
     double seconds = (end.tv_sec - start.tv_sec) + 1.0e-6 * (end.tv_usec - start.tv_usec);
