@@ -61,6 +61,12 @@ elif [ "$1" = "cholesky" ]; then
     echo -e "\e[0;32mrunning CHOLESKY...\e[0m"
     ./harness
 
+elif [ "$1" = "delaunay" ]; then
+    icc $FLAGS -o harness delaunay_harness.cpp DelaunayProblem.cpp edge.cpp library.cpp mypred.cpp predicates.c $FRAMEWORK
+    echo -e "\e[0;32mrunning DELAUNAY...\e[0m"
+    ./harness
+    # To benchmark the sequential version: make && ./main -t 1 -r 1000000 (the last part is the problem size)
+
 else
     echo -e "\e[0;31mERROR: Algorithm not found\e[0m"
     exit
