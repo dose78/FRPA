@@ -1,16 +1,23 @@
 #include "QuicksortProblem.h"
 
+int cmp(const void *x, const void *y) {
+    double xx = *(double*)x, yy = *(double*)y;
+    if (xx < yy) return -1;
+    if (xx > yy) return  1;
+    return 0;
+}
+
 QuicksortProblem::QuicksortProblem(double *A, int length) {
     this->A = A;
     this->length = length;
 }
 
 bool QuicksortProblem::shouldRunBaseCase(int depth) {
-    return (length < 2);
+    return (depth >= MAX_DEPTH || length < MAX_SIZE);
 }
 
 void QuicksortProblem::runBaseCase() {
-    return;
+    qsort(A, length, sizeof(double), cmp);
 }
 
 std::vector<Task*> QuicksortProblem::split() {

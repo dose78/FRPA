@@ -1,5 +1,7 @@
 #include "Task.h"
 #include "Problem.h"
+#define MAX_DEPTH 5
+#define MAX_SIZE 100
 
 class QuicksortProblem: public Problem {
 public:
