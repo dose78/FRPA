@@ -102,7 +102,7 @@ int main(int argc, char **argv) {
         printf("WARNING: Matrix size may be too small to produce accurate timing data\n");
     }
     fprintf(f,"CARMA: %d,%d,%d,%f\n", m, k, n, Gflop_s);
-    printf("CARMA: %d,%d,%d,%f\n", m, k, n, Gflop_s);
+    printf("CARMA,%d,%d,%d,%f\n", m, k, n, Gflop_s);
 
     // check for correctness
     // memset(C[0], 0, sizeof(double) * m * n); //if commented, this tests C = A*B instead of C += A*B or C = A*B

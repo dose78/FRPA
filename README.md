@@ -21,5 +21,8 @@ You must have Intel Parallel Studio XE installed, which will provide Cilk and MK
 ### Authors
 David Eliahu, Omer Spillinger
 
+### Contributors
+Peter Birsinger, Benjamin Lipshitz
+
 ### Mentors/Supervisors
 Professor Armando Fox, Professor James Demmel, Benjamin Lipshitz, Oded Schwartz, Shoaib Kamil
