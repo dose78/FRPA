@@ -59,6 +59,5 @@ int main(int argc, char **argv) {
     free(C);
     delete problem;
     fclose(f);
-    printf("SUCCESS\n");
     return 0;
 }

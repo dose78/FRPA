@@ -75,7 +75,7 @@ int main(int argc, char **argv) {
 
     // discover how many multiplies are needed
     int num_matrices = guess_num_matrices(m, k, n);
-    printf("Num matrices required: %d\n", num_matrices);
+    // printf("Num matrices required: %d\n", num_matrices);
 
     CarmaProblem** problems = (CarmaProblem**) malloc(num_matrices * sizeof(CarmaProblem*));
     double *A[num_matrices], *B[num_matrices], *C[num_matrices];
@@ -93,17 +93,14 @@ int main(int argc, char **argv) {
     clearCache(cacheClearer); // clear cache
     gettimeofday(&start, NULL);
     for (int i = 0; i < num_matrices; i++) {
-        // solve(problems[i]);
-        cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans, m,n,k, -1, A[0],m, B[0],k, 1, C[0],m);
+        solve(problems[i]);
     }
     gettimeofday(&end, NULL);
     double seconds = (end.tv_sec - start.tv_sec) + 1.0e-6 * (end.tv_usec - start.tv_usec);
     double Gflop_s = num_matrices * 2e-9 * m * k * n / seconds;
-
     if (seconds < 0.02) {
         printf("WARNING: Matrix size may be too small to produce accurate timing data\n");
     }
-
     fprintf(f,"CARMA: %d,%d,%d,%f\n", m, k, n, Gflop_s);
     printf("CARMA: %d,%d,%d,%f\n", m, k, n, Gflop_s);
 
@@ -130,6 +127,5 @@ int main(int argc, char **argv) {
     free(cacheClearer);
     free(problems);
     fclose(f);
-    printf("SUCCESS\n");
     return 0;
 }

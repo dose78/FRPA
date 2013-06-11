@@ -2,8 +2,8 @@
 #include "MergesortProblem.h"
 #include "framework.h"
 
-#define MIN_LENGTH 1
-#define MAX_LENGTH 1000
+#define MIN_LENGTH 1024
+#define MAX_LENGTH 1024*1024
 
 void initialize(double *A, int length) {
     srand48(time(NULL));
@@ -24,46 +24,45 @@ int cmp_harness(const void *x, const void *y) {
 
 int main(int argc, char **argv) {
     srand48(time(NULL));
-    FILE *f = fopen("mergesort.csv","a");
+    FILE *f = fopen("mergesort.csv","w");
+    fprintf(f,"length,mergesort,built in,ratio\n");
+    printf("length\tmergesort\tbuilt in\tratio\n");
 
-    // for (int length = MIN_LENGTH; length <= MAX_LENGTH; length++) {
-    int length = 100000000; // dont try over 1 billion = 1000000000
-    double *A = (double*) malloc(length * sizeof(double));
-    double *B = (double*) malloc(length * sizeof(double));
-    initialize(A, length);
-    memcpy(B, A, length * sizeof(double));
+    for (int length = MIN_LENGTH; length <= MAX_LENGTH; length*=2) {
+        double *A = (double*) malloc(length * sizeof(double));
+        double *B = (double*) malloc(length * sizeof(double));
+        initialize(A, length);
+        memcpy(B, A, length * sizeof(double));
 
-    MergesortProblem* problem = new MergesortProblem(A, length);
+        MergesortProblem* problem = new MergesortProblem(A, length);
 
-    struct timeval start, end;
-    gettimeofday(&start, NULL);
-    solve(problem);
-    gettimeofday(&end, NULL);
-    double mergeTime = (end.tv_sec - start.tv_sec) + 1.0e-6 * (end.tv_usec - start.tv_usec);
-    printf("MERGESORT,%d,%f\n", length, mergeTime);
+        struct timeval start, end;
+        gettimeofday(&start, NULL);
+        solve(problem);
+        gettimeofday(&end, NULL);
+        double mergesortTime = (end.tv_sec - start.tv_sec) + 1.0e-6 * (end.tv_usec - start.tv_usec);
 
-    gettimeofday(&start, NULL);
-    qsort(B, length, sizeof(double), cmp_harness);
-    gettimeofday(&end, NULL);
-    double builtInTime = (end.tv_sec - start.tv_sec) + 1.0e-6 * (end.tv_usec - start.tv_usec);
-    printf("BUILT-IN,%d,%f\n", length, builtInTime);
-    printf("SPEEDUP: %f\n\n", (builtInTime / mergeTime));
+        gettimeofday(&start, NULL);
+        qsort(B, length, sizeof(double), cmp_harness);
+        gettimeofday(&end, NULL);
+        double builtInTime = (end.tv_sec - start.tv_sec) + 1.0e-6 * (end.tv_usec - start.tv_usec);
 
-    fprintf(f,"%d,%f,%f,%f\n", length, mergeTime, builtInTime, (builtInTime / mergeTime));
+        fprintf(f,"%d,%f,%f,%f\n", length, mergesortTime, builtInTime, (builtInTime / mergesortTime));
+        printf("%d\t%f\t%f\t%f\n", length, mergesortTime, builtInTime, (builtInTime / mergesortTime));
 
-    // check for correctness
-    // for(int i = 0; i < length-1; i++) {
-    //     if (A[i] > A[i+1]) {
-    //         printf("FAILURE: array not sorted\n");
-    //         exit(EXIT_FAILURE);
-    //         break;
-    //     }
-    // }
+        // check for correctness
+        // for(int i = 0; i < length-1; i++) {
+        //     if (A[i] > A[i+1]) {
+        //         printf("FAILURE: array not sorted\n");
+        //         exit(EXIT_FAILURE);
+        //         break;
+        //     }
+        // }
 
-    delete problem;
-    free(A);
-    free(B);
-    // }
+        delete problem;
+        free(A);
+        free(B);
+    }
 
     fclose(f);
     return 0;
