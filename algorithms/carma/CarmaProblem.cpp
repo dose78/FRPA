@@ -12,10 +12,6 @@ CarmaProblem::CarmaProblem(int M, int K, int m, int k, int n, int CM, double *A,
     this->A = A; this->B = B; this->C = C;
 }
 
-bool CarmaProblem::shouldRunBaseCase(int depth) {
-    return (depth >= MAX_DEPTH);
-}
-
 void CarmaProblem::runBaseCase() {
     cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,m,n,k,1,A,M,B,K,1,C,CM);
 }

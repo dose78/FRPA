@@ -8,7 +8,6 @@ public:
     int n, N;
     double *X, *T;
     TrsmProblem(double *X, double *T, int n, int N);
-    bool shouldRunBaseCase(int depth);
     void runBaseCase();
     std::vector<Task*> split();
     void merge(std::vector<Problem*> subproblems);

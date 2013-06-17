@@ -17,3 +17,8 @@ std::vector<Problem*> Problem::splitSequential() {
 void Problem::mergeSequential(std::vector<Problem*> subproblems) {
     merge(subproblems);
 };
+
+bool Problem::shouldRunBaseCase(int depth) {
+    int numCPU = sysconf( _SC_NPROCESSORS_ONLN );
+    return (depth >= log2(numCPU));
+} 

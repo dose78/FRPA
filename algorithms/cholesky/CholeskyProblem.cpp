@@ -8,10 +8,6 @@ CholeskyProblem::CholeskyProblem(double *A, int n, int N) {
     this->N = N;
 }
 
-bool CholeskyProblem::shouldRunBaseCase(int depth) {
-    return (depth >= MAX_DEPTH);
-}
-
 void CholeskyProblem::runBaseCase() {
     int info;
     char *Lc = "L";

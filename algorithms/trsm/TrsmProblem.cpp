@@ -8,10 +8,6 @@ TrsmProblem::TrsmProblem(double *X, double *T, int n, int N) {
     this->N = N;
 }
 
-bool TrsmProblem::shouldRunBaseCase(int depth) {
-    return (depth >= MAX_DEPTH);
-}
-
 void TrsmProblem::runBaseCase() {
     cblas_dtrsm(CblasColMajor, CblasRight, CblasLower, CblasTrans, CblasNonUnit, n, n, 1.0, T, N, X, N);
 

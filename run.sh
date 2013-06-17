@@ -25,11 +25,11 @@ elif [ "$1" = "carma" ]; then
     icc  -I framework $FLAGS -I framework -o harness  algorithms/carma/carma_harness.cpp algorithms/carma/CarmaProblem.cpp $FRAMEWORK
     echo -e "\e[0;32mrunning CARMA...\e[0m"
     MIN_K=1024
-    MAX_K=262144
+    MAX_K=1024
     ITERATIONS=2
     for (( k=$MIN_K; k<=$MAX_K; k*=2 )); do
         for (( i=1; i<=$ITERATIONS; i+=1 )); do
-            ./harness 64 $k 64
+            ./harness 1024 $k 1024
         done
     done
 

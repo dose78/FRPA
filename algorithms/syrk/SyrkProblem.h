@@ -8,7 +8,6 @@ public:
     int n, ldc, lda;
     double *C, *A;
     SyrkProblem(double *C, double *A, int n, int ldc, int lda);
-    bool shouldRunBaseCase(int depth);
     void runBaseCase();
     std::vector<Task*> split();
     std::vector<Problem*> splitSequential();

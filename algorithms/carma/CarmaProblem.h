@@ -5,14 +5,12 @@
 #define SPLIT_M 1
 #define SPLIT_K 2
 #define SPLIT_N 3
-#define MAX_DEPTH 5
 
 class CarmaProblem: public Problem {
 public:
     int M, K, m, k, n, CM;
     double *A, *B, *C;
     CarmaProblem(int M, int K, int m, int k, int n, int CM, double *A, double *B, double *C);
-    bool shouldRunBaseCase(int depth);
     void runBaseCase();
     std::vector<Task*> split();
     std::vector<Problem*> splitSequential();

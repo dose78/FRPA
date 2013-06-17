@@ -9,10 +9,6 @@ SyrkProblem::SyrkProblem(double *C, double *A, int n, int ldc, int lda) {
     this->lda = lda;
 }
 
-bool SyrkProblem::shouldRunBaseCase(int depth) {
-    return (depth >= MAX_DEPTH);
-}
-
 void SyrkProblem::runBaseCase() {
     cblas_dsyrk(CblasColMajor, CblasLower, CblasNoTrans, n, n, -1.0, A, lda, 1.0, C, ldc);
 

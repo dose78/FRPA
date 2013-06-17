@@ -16,7 +16,7 @@ class Task;
 
 class Problem {
 public:
-    virtual bool shouldRunBaseCase(int depth) = 0;
+    virtual bool shouldRunBaseCase(int depth);
     virtual void runBaseCase() = 0;
     virtual std::vector<Task*> split() = 0;
     virtual std::vector<Problem*> splitSequential();
