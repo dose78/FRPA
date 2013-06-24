@@ -9,18 +9,6 @@ StrassenProblem::StrassenProblem(int m, int k, int n, double *A, double *B, doub
     this->C = C;
 }
 
-bool StrassenProblem::shouldRunBaseCase(int depth) {
-    return (depth >= 2);
-/*
-    if (m <= 32 || k <= 32 || n <= 32){
-        return true;
-    }
-    else {
-        return false;
-    }
-*/
-}
-
 void StrassenProblem::runBaseCase() {
     // cblas_dtrsm(CblasColMajor, CblasRight, CblasLower, CblasTrans, CblasNonUnit, n, n, 1.0, T, n, X, n);
     cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans, m, n,k, 1, A,m, B,k, 0, C,m);

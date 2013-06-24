@@ -10,7 +10,7 @@ public:
   int begin, end;
   QuadEdge *ldo, *rdo;
   DelaunayProblem(std::vector<Point*> *S, int begin, int end);
-  bool shouldRunBaseCase(int depth);
+  bool canRunBaseCase();
   void runBaseCase();
   std::vector<Task*> split();
   void merge(std::vector<Problem*> subproblems);

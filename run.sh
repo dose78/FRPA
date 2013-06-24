@@ -6,7 +6,7 @@ export CILK_NWORKERS=32
 export MKL_NUM_THREADS=1
 echo -e "\e[01;34mRunning with $CILK_NWORKERS threads\e[0m"
 
-echo -e "\e[0;32mcompiling..\e[0m"
+echo -e "\e[0;32mcompiling...\e[0m"
 
 FLAGS="-O3 -mkl -ipo -xHOST -no-prec-div -fno-strict-aliasing -fno-omit-frame-pointer"
 FRAMEWORK="framework/framework.cpp framework/Task.cpp framework/Problem.cpp"

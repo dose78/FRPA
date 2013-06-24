@@ -1,7 +1,6 @@
 #include <mkl.h>
 #include "Task.h"
 #include "Problem.h"
-#define MAX_DEPTH 5
 
 class CholeskyProblem: public Problem {
 public:

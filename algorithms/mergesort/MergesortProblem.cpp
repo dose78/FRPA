@@ -12,6 +12,10 @@ MergesortProblem::MergesortProblem(double *A, int length) {
     this->length = length;
 }
 
+bool MergesortProblem::mustRunBaseCase() {
+    return (length < MAX_SIZE);
+}
+
 void MergesortProblem::runBaseCase() {
     qsort(A, length, sizeof(double), cmp);
 }

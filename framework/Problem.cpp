@@ -18,7 +18,10 @@ void Problem::mergeSequential(std::vector<Problem*> subproblems) {
     merge(subproblems);
 };
 
-bool Problem::shouldRunBaseCase(int depth) {
-    int numCPU = sysconf( _SC_NPROCESSORS_ONLN );
-    return (depth >= log2(numCPU));
-} 
+bool Problem::mustRunBaseCase() {
+    return false;
+}
+
+bool Problem::canRunBaseCase() {
+    return true;
+}

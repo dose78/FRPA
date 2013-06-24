@@ -6,7 +6,7 @@ DelaunayProblem::DelaunayProblem( std::vector<Point*> *S, int begin, int end ) {
   this->end = end;
 }
 
-bool DelaunayProblem::shouldRunBaseCase(int depth) {
+bool DelaunayProblem::canRunBaseCase() {
   return (end-begin)<=3;
 }
 
@@ -45,7 +45,7 @@ void DelaunayProblem::runBaseCase() {
     }
   } else {
     printf("Error, base case should have 2 or three points\n");
-  }   
+  }
 }
 
 std::vector<Task*> DelaunayProblem::split() {
@@ -106,14 +106,14 @@ void DelaunayProblem::merge( std::vector<Problem*> subproblems ) {
 
       if( !rightOf(lcand->Dest(),basel) && !rightOf(rcand->Dest(),basel) )
 	break;
-    
-      if( !rightOf(lcand->Dest(),basel) || (rightOf(rcand->Dest(),basel) && 
+
+      if( !rightOf(lcand->Dest(),basel) || (rightOf(rcand->Dest(),basel) &&
 					    inCircle( lcand->Dest(), lcand->Org(), rcand->Org(), rcand->Dest() ) ) )
 	basel = connect( rcand, basel->Sym() );
       else
 	basel = connect( basel->Sym(), lcand->Sym() );
     }
-    
+
     this->ldo = ldo;
     this->rdo = rdo;
 }

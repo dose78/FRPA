@@ -2,6 +2,11 @@
 
 void solve(Problem* problem, int depth);
 
+bool shouldRunBaseCase(int depth) {
+    int numCPU = sysconf( _SC_NPROCESSORS_ONLN );
+    return (depth >= (log2(numCPU)) - 0.01);
+}
+
 void solveTask(Task* task, int depth) {
     std::vector<Problem*> problems = task->getProblems();
     for(std::vector<Problem*>::iterator problemIter = problems.begin(); problemIter != problems.end(); problemIter++) {
@@ -30,7 +35,7 @@ std::vector<Problem*> getSubproblemsFromTasks(std::vector<Task*> tasks) {
 }
 
 void solve(Problem* problem, int depth) {
-    if (problem->shouldRunBaseCase(depth)) {
+    if (problem->canRunBaseCase() && (problem->mustRunBaseCase() || shouldRunBaseCase(depth))) {
         problem->runBaseCase();
         return;
     }

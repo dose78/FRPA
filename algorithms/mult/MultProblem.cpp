@@ -10,7 +10,7 @@ MultProblem::MultProblem(double *C, double *A, double *B, int n, int ldc, int ld
     this->ldb = ldb;
 }
 
-bool MultProblem::shouldRunBaseCase(int depth) {
+bool MultProblem::mustRunBaseCase() {
     return true;
 }
 

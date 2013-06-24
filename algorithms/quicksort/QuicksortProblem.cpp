@@ -12,8 +12,8 @@ QuicksortProblem::QuicksortProblem(double *A, int length) {
     this->length = length;
 }
 
-bool QuicksortProblem::shouldRunBaseCase(int depth) {
-    return (depth >= MAX_DEPTH || length < MAX_SIZE);
+bool QuicksortProblem::mustRunBaseCase() {
+    return (length < MAX_SIZE);
 }
 
 void QuicksortProblem::runBaseCase() {
