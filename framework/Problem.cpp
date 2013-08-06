@@ -1,6 +1,7 @@
 #include "Problem.h"
 #include "Task.h"
 
+
 std::vector<Problem*> Problem::splitSequential() {
     std::vector<Problem*> subproblems;
     std::vector<Task*> tasks = split();

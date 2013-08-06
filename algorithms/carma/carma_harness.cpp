@@ -1,6 +1,7 @@
 #include "harness.h"
 #include "CarmaProblem.h"
 #include "framework.h"
+#include "memory.h"
 
 #define NUM_SMALL_MATRICES_MAX 5000
 
@@ -103,6 +104,11 @@ int main(int argc, char **argv) {
     }
     fprintf(f,"CARMA: %d,%d,%d,%f\n", m, k, n, Gflop_s);
     printf("CARMA,%d,%d,%d,%f\n", m, k, n, Gflop_s);
+
+#ifdef DEBUG
+	printf("memory: %d bytes\n", Memory::current);
+	printf("max: %d bytes\n", Memory::max);
+#endif
 
     // check for correctness
     // memset(C[0], 0, sizeof(double) * m * n); //if commented, this tests C = A*B instead of C += A*B or C = A*B

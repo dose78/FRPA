@@ -1,4 +1,6 @@
 #include "StrassenProblem.h"
+#include "debug.h"
+#include "memory.h"
 
 StrassenProblem::StrassenProblem(int m, int k, int n, double *A, double *B, double *C) {
     this->m = m;
@@ -21,6 +23,7 @@ std::vector<Task*> StrassenProblem::split() {
     int S_k = T_k;
     int S_n = n/2;
     int i;
+
     //compute T0-6, S0-6
     double *T0 = (double*) malloc(T_m * T_k * sizeof(double));
     double *T1 = (double*) malloc(T_m * T_k * sizeof(double));

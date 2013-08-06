@@ -1,4 +1,5 @@
 #include "framework.h"
+#include "debug.h"
 
 void solve(Problem* problem, int depth);
 
@@ -39,11 +40,12 @@ void solve(Problem* problem, int depth) {
         problem->runBaseCase();
         return;
     }
-
+		
     std::vector<Problem*> subproblems;
     int BFS[] = { 1, 1, 1, 1, 1 };
     if (BFS[depth]) {
         std::vector<Task*> tasks = problem->split();
+		//pthread_mutex_t m1 = PTHREAD_MUTEX_INITIALIZER;
         for(std::vector<Task*>::iterator taskIterator = tasks.begin(); taskIterator != tasks.end(); taskIterator++) {
             Task *task = *taskIterator;
             cilk_spawn solveTask(task, depth+1);

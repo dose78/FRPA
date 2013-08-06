@@ -20,7 +20,7 @@ int main() {
     solve(problem);
 
     printf("%d time %f\n", n, read_timer()-stime);
-    
+	printf("memory: %d bytes\n", problem->memory);
     delete problem;
   }
 }

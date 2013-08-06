@@ -1,4 +1,6 @@
 #include "CarmaProblem.h"
+#include "debug.h"
+#include "memory.h"
 
 int CarmaProblem::getDimToSplit() {
     if (n >= k && n >= m) return SPLIT_N;

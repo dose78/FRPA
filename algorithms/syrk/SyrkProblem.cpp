@@ -1,5 +1,7 @@
 #include "SyrkProblem.h"
 #include "MultProblem.h"
+#include "debug.h"
+#include "memory.h"
 
 SyrkProblem::SyrkProblem(double *C, double *A, int n, int ldc, int lda) {
     this->C = C;

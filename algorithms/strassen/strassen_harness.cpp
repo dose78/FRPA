@@ -1,6 +1,7 @@
 #include "harness.h"
 #include "StrassenProblem.h"
 #include "framework.h"
+#include "memory.h"
 
 void initialize(int m, int k, int n, double* A, double* B, double* C) {
     for(int i = 0; i < m*k; i++) A[i] = 2 * drand48() - 1;
@@ -14,7 +15,7 @@ int main(int argc, char **argv) {
     int m = atoi(argv[1]);
     int k = atoi(argv[2]);
     int n = atoi(argv[3]);
-
+	
     FILE *f = fopen("strassen.csv","a");
 
     double *A, *B, *C;
@@ -23,7 +24,7 @@ int main(int argc, char **argv) {
     C = (double*) malloc(m * n * sizeof(double));
     initialize(m, k, n, A, B, C);
     StrassenProblem* problem = new StrassenProblem(m, k, n, A, B, C);
-
+	
     // Time multiplication
     struct timeval start, end;
     gettimeofday(&start, NULL);
@@ -59,5 +60,9 @@ int main(int argc, char **argv) {
     free(C);
     delete problem;
     fclose(f);
+#ifdef DEBUG
+	printf("memory: %d bytes\n", Memory::current);
+	printf("max: %d bytes\n", Memory::max);
+#endif
     return 0;
 }

@@ -1,6 +1,7 @@
 #include "harness.h"
 #include "framework.h"
 #include "SyrkProblem.h"
+#include "memory.h"
 
 void initialize(double *C, double *A, double *C2, double *A2, int n) {
     srand48(time(NULL));
@@ -40,7 +41,10 @@ int main(int argc, char **argv) {
             exit(EXIT_FAILURE);
         }
     }
-
+#ifdef DEBUG
+	printf("memory: %d bytes\n", Memory::current);
+	printf("max: %d bytes\n", Memory::max);
+#endif
     free(C);
     free(A);
     free(C2);
