@@ -9,6 +9,7 @@ public:
     int n, m,k;
     double *A, *B, *C;
     StrassenProblem(int m, int k, int n, double *A, double *B, double *C);
+    bool shouldRunBaseCase(int depth);
     void runBaseCase();
     std::vector<Task*> split();
     void merge(std::vector<Problem*> subproblems);

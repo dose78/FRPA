@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
     int m = atoi(argv[1]);
     int k = atoi(argv[2]);
     int n = atoi(argv[3]);
-	
+
     FILE *f = fopen("strassen.csv","a");
 
     double *A, *B, *C;
@@ -24,7 +24,7 @@ int main(int argc, char **argv) {
     C = (double*) malloc(m * n * sizeof(double));
     initialize(m, k, n, A, B, C);
     StrassenProblem* problem = new StrassenProblem(m, k, n, A, B, C);
-	
+
     // Time multiplication
     struct timeval start, end;
     gettimeofday(&start, NULL);

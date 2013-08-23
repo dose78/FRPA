@@ -12,7 +12,6 @@ StrassenProblem::StrassenProblem(int m, int k, int n, double *A, double *B, doub
 }
 
 void StrassenProblem::runBaseCase() {
-    // cblas_dtrsm(CblasColMajor, CblasRight, CblasLower, CblasTrans, CblasNonUnit, n, n, 1.0, T, n, X, n);
     cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans, m, n,k, 1, A,m, B,k, 0, C,m);
     //printf("Strassen %d Base Case Ran\n",n);
 }
@@ -108,21 +107,21 @@ void StrassenProblem::merge(std::vector<Problem*> problems) {
     int S_k = T_k;
     int S_n = n/2;
 
-    double **Q =  (double**) malloc(7 * sizeof(double*));
+    double **Qs =  (double**) malloc(7 * sizeof(double*));
 
     int i = 0;
     for(std::vector<Problem*>::iterator problemIterator = problems.begin(); problemIterator != problems.end(); problemIterator++) {
         StrassenProblem *problem = (StrassenProblem*)*problemIterator;
-       	Q[i++] = (double*)problem->C;
+        Qs[i++] = (double*)problem->C;
     }
 
     double *U1 = (double*) malloc(T_m * S_n * sizeof(double));
     double *U2 = (double*) malloc(T_m * S_n * sizeof(double));
     double *U3 = (double*) malloc(T_m * S_n * sizeof(double));
 
-    matrix_add(T_m *S_n, Q[0], Q[3], U1);
-    matrix_add(T_m *S_n, U1, Q[4], U2);
-    matrix_add(T_m *S_n, U1, Q[2], U3);
+    matrix_add(T_m *S_n, Qs[0], Qs[3], U1);
+    matrix_add(T_m *S_n, U1, Qs[4], U2);
+    matrix_add(T_m *S_n, U1, Qs[2], U3);
 
     //compute C
     double *C11 = (double*) malloc(T_m * S_n * sizeof(double));
@@ -130,16 +129,39 @@ void StrassenProblem::merge(std::vector<Problem*> problems) {
     double *C21 = (double*) malloc(T_m * S_n * sizeof(double));
     double *C22 = (double*) malloc(T_m * S_n * sizeof(double));
 
-    matrix_add(T_m *S_n, Q[0], Q[1], C11);
-    matrix_add(T_m *S_n, U3, Q[5], C12);
-    matrix_subtract(T_m *S_n, U2, Q[6], C21);
-    matrix_add(T_m*S_n, U2, Q[2], C22);
+    matrix_add(T_m *S_n, Qs[0], Qs[1], C11);
+    matrix_add(T_m *S_n, U3, Qs[5], C12);
+    matrix_subtract(T_m *S_n, U2, Qs[6], C21);
+    matrix_add(T_m*S_n, U2, Qs[2], C22);
 
     for (i = 0; i < S_n; i++){
         memcpy(C +i * m, C11 + i*T_m, T_m * sizeof(double));
         memcpy(C + (i+S_n) * m, C12 + i*T_m, T_m * sizeof(double));
         memcpy(C +T_m+i * m, C21 + i*T_m, T_m * sizeof(double));
         memcpy(C +T_m+(i+S_n) * m, C22 + i*T_m, T_m * sizeof(double));
+    }
+
+    for(std::vector<Problem*>::iterator problemIterator = problems.begin(); problemIterator != problems.end(); problemIterator++) {
+        StrassenProblem *problem = (StrassenProblem*)*problemIterator;
+        free(problem->A);
+        free(problem->B);
+        free(problem->C);
+    }
+    free(U1);
+    free(U2);
+    free(U3);
+    free(C11);
+    free(C12);
+    free(C21);
+    free(C22);
+    free(Qs);
+}
+
+bool StrassenProblem::shouldRunBaseCase(int depth) {
+    if (depth > 2) {
+        return true;
+    } else {
+        return false;
     }
 }
 
