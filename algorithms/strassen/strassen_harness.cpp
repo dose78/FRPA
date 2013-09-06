@@ -60,9 +60,9 @@ int main(int argc, char **argv) {
     free(C);
     delete problem;
     fclose(f);
-#ifdef DEBUG
-	printf("memory: %d bytes\n", Memory::current);
-	printf("max: %d bytes\n", Memory::max);
-#endif
+    #ifdef DEBUG
+        printf("memory: %d bytes\n", Memory::current);
+        printf("max: %d bytes\n", Memory::max);
+    #endif
     return 0;
 }

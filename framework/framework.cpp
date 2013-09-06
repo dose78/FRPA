@@ -5,6 +5,7 @@ void solve(Problem* problem, int depth);
 
 bool shouldRunBaseCase(int depth) {
     int numCPU = sysconf( _SC_NPROCESSORS_ONLN );
+    // printf("%s\n", ); //todo fix
     return (depth >= (log2(numCPU)) - 0.01);
 }
 
@@ -40,7 +41,7 @@ void solve(Problem* problem, int depth) {
         problem->runBaseCase();
         return;
     }
-		
+
     std::vector<Problem*> subproblems;
     int BFS[] = { 1, 1, 1, 1, 1 };
     if (BFS[depth]) {

@@ -12,169 +12,113 @@ StrassenProblem::StrassenProblem(int m, int k, int n, double *A, double *B, doub
 }
 
 void StrassenProblem::runBaseCase() {
-    cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans, m, n,k, 1, A,m, B,k, 0, C,m);
-    //printf("Strassen %d Base Case Ran\n",n);
+    cblas_dgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, m, n, k, 1, A, m, B, k, 0, C, m);
 }
 
 std::vector<Task*> StrassenProblem::split() {
     int T_m = m/2;
-    int T_k = k/2;
-    int S_k = T_k;
+    int T_n = k/2;
+    int S_m = k/2;
     int S_n = n/2;
-    int i;
 
-    //compute T0-6, S0-6
-    double *T0 = (double*) malloc(T_m * T_k * sizeof(double));
-    double *T1 = (double*) malloc(T_m * T_k * sizeof(double));
-    double *T2 = (double*) malloc(T_m * T_k * sizeof(double));
-    double *T3 = (double*) malloc(T_m * T_k * sizeof(double));
-    double *T4 = (double*) malloc(T_m * T_k * sizeof(double));
-    double *T5 = (double*) malloc(T_m * T_k * sizeof(double));
-    double *T6 = (double*) malloc(T_m * T_k * sizeof(double));
+    double *A11 = A;
+    double *A21 = A + m/2;
+    double *A12 = A + m*k/2;
+    double *A22 = A + m*k/2 + m/2;
 
-    double *S0 = (double*) malloc(S_k * S_n * sizeof(double));
-    double *S1 = (double*) malloc(S_k * S_n * sizeof(double));
-    double *S2 = (double*) malloc(S_k * S_n * sizeof(double));
-    double *S3 = (double*) malloc(S_k * S_n * sizeof(double));
-    double *S4 = (double*) malloc(S_k * S_n * sizeof(double));
-    double *S5 = (double*) malloc(S_k * S_n * sizeof(double));
-    double *S6 = (double*) malloc(S_k * S_n * sizeof(double));
+    double *B11 = B;
+    double *B21 = B + k/2;
+    double *B12 = B + k*n/2;
+    double *B22 = B + k*n/2 + k/2;
 
-    for (i = 0; i < T_k; i++){
-        memcpy(T0 +i * T_m, A + i*m, T_m * sizeof(double));
-        memcpy(T1 +i * T_m, A +(i+T_k) *m, T_m * sizeof(double));
-
-        memcpy(T2 +i * T_m, A +T_m+ i*m, T_m * sizeof(double));
-        memcpy(T4 +i * T_m, A + i*m, T_m * sizeof(double));
-
-        memcpy(T5 +i * T_m, A + (i+T_k)*m, T_m * sizeof(double));
-        memcpy(T6 +i * T_m, A +T_m+ (i+T_k)*m, T_m * sizeof(double));
+    double *T[7], *S[7], *Q[7];
+    for (int i = 0; i < 7; i++) {
+        T[i] = (double*) malloc(T_m * T_n * sizeof(double));
+        S[i] = (double*) malloc(S_m * S_n * sizeof(double));
+        Q[i] = (double*) malloc(T_m * S_n * sizeof(double));
     }
 
-    for (i = 0; i < S_n; i++){
-        memcpy(S0 +i * S_k, B + i*k, S_k * sizeof(double));
+    matrix_copy(T_m, T_n, T[0], T_m, A11, m);
+    matrix_copy(T_m, T_n, T[1], T_m, A12, m);
+    matrix_add(T_m, T_n, A21, m, A22, m, T[2], T_m);
+    matrix_subtract(T_m, T_n, T[2], T_m, A11, m, T[3], T_m);
+    matrix_subtract(T_m, T_n, A11, m, A21, m, T[4], T_m);
+    matrix_subtract(T_m, T_n, A12, m, T[3], T_m, T[5], T_m);
+    matrix_copy(T_m, T_n, T[6], T_m, A22, m);
 
-        memcpy(S1 +i * S_k, B + S_k + i*k, S_k * sizeof(double));
-        memcpy(S2 +i * S_k, B + (i+S_n)*k, S_k * sizeof(double));
-        memcpy(S3 +i * S_k, B + S_k+(i+S_n)*k, S_k * sizeof(double));
-        memcpy(S4 +i * S_k, B + S_k+ (i+S_n)*k, S_k * sizeof(double));
-        memcpy(S5 +i * S_k, B + S_k +(i+S_n)*k, S_k * sizeof(double));
-    }
-
-    matrix_subtract(T_m *T_k, T0, T2, T4);
-    matrix_add(T_m *T_k, T2, T6, T2);
-    matrix_subtract(T_m *T_k, T2, T0, T3);
-    matrix_subtract(T_m *T_k, T1, T3, T5);
-
-    matrix_subtract(S_k*S_n, S4, S2, S4);
-    matrix_subtract(S_k *S_n, S2, S0, S2);
-    matrix_subtract(S_k *S_n, S3, S2, S3);
-    matrix_subtract(S_k *S_n, S3, S1, S6);
-
-    // compute Q0-6
-    double *Q0 = (double*) malloc(T_m * S_n * sizeof(double));
-    double *Q1 = (double*) malloc(T_m * S_n * sizeof(double));
-    double *Q2 = (double*) malloc(T_m * S_n * sizeof(double));
-    double *Q3 = (double*) malloc(T_m * S_n * sizeof(double));
-    double *Q4 = (double*) malloc(T_m * S_n * sizeof(double));
-    double *Q5 = (double*) malloc(T_m * S_n * sizeof(double));
-    double *Q6 = (double*) malloc(T_m * S_n * sizeof(double));
-
-    Task* task1 = new Task(new StrassenProblem(T_m, T_k, S_n, T0, S0, Q0));
-    Task* task2 = new Task(new StrassenProblem(T_m, T_k, S_n, T1, S1, Q1));
-    Task* task3 = new Task(new StrassenProblem(T_m, T_k, S_n, T2, S2, Q2));
-    Task* task4 = new Task(new StrassenProblem(T_m, T_k, S_n, T3, S3, Q3));
-    Task* task5 = new Task(new StrassenProblem(T_m, T_k, S_n, T4, S4, Q4));
-    Task* task6 = new Task(new StrassenProblem(T_m, T_k, S_n, T5, S5, Q5));
-    Task* task7 = new Task(new StrassenProblem(T_m, T_k, S_n, T6, S6, Q6));
+    matrix_copy(S_m, S_n, S[0], S_m, B11, k);
+    matrix_copy(S_m, S_n, S[1], S_m, B21, k);
+    matrix_subtract(S_m, S_n, B12, k, B11, k, S[2], S_m);
+    matrix_subtract(S_m, S_n, B22, k, S[2], S_m, S[3], S_m);
+    matrix_subtract(S_m, S_n, B22, k, B12, k, S[4], S_m);
+    matrix_copy(S_m, S_n, S[5], S_m, B22, k);
+    matrix_subtract(S_m, S_n, S[3], S_m, B21, k, S[6], S_m);
 
     std::vector<Task*> tasks (7);
-    tasks[0] = task1;
-    tasks[1] = task2;
-    tasks[2] = task3;
-    tasks[3] = task4;
-    tasks[4] = task5;
-    tasks[5] = task6;
-    tasks[6] = task7;
-
+    for (int i = 0; i < 7; i++) {
+        tasks[i] = new Task(new StrassenProblem(T_m, T_n, S_n, T[i], S[i], Q[i]));
+    }
     return tasks;
 }
 
 void StrassenProblem::merge(std::vector<Problem*> problems) {
-    //printf("Strassen Merge\n");
-    int T_m = m/2;
-    int T_k = k/2;
-    int S_k = T_k;
-    int S_n = n/2;
+    double *C11 = C;
+    double *C21 = C + m/2;
+    double *C12 = C + m*n/2;
+    double *C22 = C + m*n/2 + m/2;
 
-    double **Qs =  (double**) malloc(7 * sizeof(double*));
+    double *U1 = (double*) malloc(m/2 * n/2 * sizeof(double));
+    double *U2 = (double*) malloc(m/2 * n/2 * sizeof(double));
+    double *U3 = (double*) malloc(m/2 * n/2 * sizeof(double));
 
-    int i = 0;
+    double *Q[7];
+    int counter = 0;
     for(std::vector<Problem*>::iterator problemIterator = problems.begin(); problemIterator != problems.end(); problemIterator++) {
         StrassenProblem *problem = (StrassenProblem*)*problemIterator;
-        Qs[i++] = (double*)problem->C;
+        Q[counter++] = (double*)problem->C;
     }
 
-    double *U1 = (double*) malloc(T_m * S_n * sizeof(double));
-    double *U2 = (double*) malloc(T_m * S_n * sizeof(double));
-    double *U3 = (double*) malloc(T_m * S_n * sizeof(double));
+    matrix_add(m/2, n/2, Q[0], m/2, Q[3], m/2, U1, m/2);
+    matrix_add(m/2, n/2, U1, m/2, Q[4], m/2, U2, m/2);
+    matrix_add(m/2, n/2, U1, m/2, Q[2], m/2, U3, m/2);
 
-    matrix_add(T_m *S_n, Qs[0], Qs[3], U1);
-    matrix_add(T_m *S_n, U1, Qs[4], U2);
-    matrix_add(T_m *S_n, U1, Qs[2], U3);
+    matrix_add(m/2, n/2, Q[0], m/2, Q[1], m/2, C11, m);
+    matrix_add(m/2, n/2, U3, m/2, Q[5], m/2, C12, m);
+    matrix_subtract(m/2, n/2, U2, m/2, Q[6], m/2, C21, m);
+    matrix_add(m/2, n/2, U2, m/2, Q[2], m/2, C22, m);
 
-    //compute C
-    double *C11 = (double*) malloc(T_m * S_n * sizeof(double));
-    double *C12 = (double*) malloc(T_m * S_n * sizeof(double));
-    double *C21 = (double*) malloc(T_m * S_n * sizeof(double));
-    double *C22 = (double*) malloc(T_m * S_n * sizeof(double));
-
-    matrix_add(T_m *S_n, Qs[0], Qs[1], C11);
-    matrix_add(T_m *S_n, U3, Qs[5], C12);
-    matrix_subtract(T_m *S_n, U2, Qs[6], C21);
-    matrix_add(T_m*S_n, U2, Qs[2], C22);
-
-    for (i = 0; i < S_n; i++){
-        memcpy(C +i * m, C11 + i*T_m, T_m * sizeof(double));
-        memcpy(C + (i+S_n) * m, C12 + i*T_m, T_m * sizeof(double));
-        memcpy(C +T_m+i * m, C21 + i*T_m, T_m * sizeof(double));
-        memcpy(C +T_m+(i+S_n) * m, C22 + i*T_m, T_m * sizeof(double));
-    }
-
+    free(U1);
+    free(U2);
+    free(U3);
     for(std::vector<Problem*>::iterator problemIterator = problems.begin(); problemIterator != problems.end(); problemIterator++) {
         StrassenProblem *problem = (StrassenProblem*)*problemIterator;
         free(problem->A);
         free(problem->B);
         free(problem->C);
     }
-    free(U1);
-    free(U2);
-    free(U3);
-    free(C11);
-    free(C12);
-    free(C21);
-    free(C22);
-    free(Qs);
 }
 
-bool StrassenProblem::shouldRunBaseCase(int depth) {
-    if (depth > 2) {
-        return true;
-    } else {
-        return false;
+// C <- A + B
+void StrassenProblem::matrix_add(int m, int n, double *A, int lda, double *B, int ldb, double *C, int ldc) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            C[i*ldc + j] = A[i*lda + j] + B[i*ldb + j];
+        }
     }
 }
 
-void StrassenProblem::matrix_add(int N, double *A, double *B, double *C) {
-    int i,j;
-    for (i =0 ; i < N; i++){
-        C[i] = A[i] + B[i];
+// C <- A - B
+void StrassenProblem::matrix_subtract(int m, int n, double *A, int lda, double *B, int ldb, double *C, int ldc) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            C[i*ldc + j] = A[i*lda + j] - B[i*ldb + j];
+        }
     }
 }
 
-void StrassenProblem::matrix_subtract(int N, double *A, double *B, double *C) {
-    int i,j;
-    for (i =0 ; i < N; i++){
-        C[i] = A[i] - B[i];
+// Copy B into A
+void StrassenProblem::matrix_copy(int m, int n, double *A, int lda, double *B, int ldb) {
+    for (int i = 0; i < n; i++) {
+        memcpy(A + i*lda, B + i*ldb, m * sizeof(double));
     }
 }
