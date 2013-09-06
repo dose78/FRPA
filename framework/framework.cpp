@@ -4,9 +4,10 @@
 void solve(Problem* problem, int depth);
 
 bool shouldRunBaseCase(int depth) {
-    int numCPU = sysconf( _SC_NPROCESSORS_ONLN );
-    // printf("%s\n", ); //todo fix
-    return (depth >= (log2(numCPU)) - 0.01);
+    // TODO something smart
+    // int numCPU = sysconf( _SC_NPROCESSORS_ONLN );
+    // return (depth >= (log2(numCPU)) - 0.01);
+    return depth >= 2; // for strassen
 }
 
 void solveTask(Task* task, int depth) {

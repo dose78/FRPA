@@ -9,12 +9,10 @@
 #include <string.h>
 #include <sys/time.h>
 
-
 class Task;
 
 #ifndef PROBLEM
 #define PROBLEM
-
 class Problem {
 public:
     virtual void runBaseCase() = 0;
@@ -24,9 +22,5 @@ public:
     virtual void mergeSequential(std::vector<Problem*> subproblems);
     virtual bool mustRunBaseCase();
     virtual bool canRunBaseCase();
-
 };
-
-
-
 #endif
