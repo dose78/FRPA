@@ -41,17 +41,17 @@ int main(int argc, char **argv) {
 
     // check for correctness
     // memset(C, 0, sizeof(double) * m * n); //if commented, this tests C = A*B instead of C += A*B or C = A*B
-    cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans, m,n,k, -1, A,m, B,k, 1, C,m);
-    for(int i = 0; i < m*k; i++) A[i] = fabs( A[i] );
-    for(int i = 0; i < k*n; i++) B[i] = fabs( B[i] );
-    for(int i = 0; i < m*n; i++) C[i] = fabs( C[i] );
-    cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans, m,n,k, -3.0*DBL_EPSILON*n, A,m, B,k, 1, C,m);
-    for(int i = 0; i < m*n; i++) {
-        if(C[i] > 0) {
-            printf("FAILURE: error in matrix multiply exceeds an acceptable margin\n");
-            return -1;
-        }
-    }
+    // cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans, m,n,k, -1, A,m, B,k, 1, C,m);
+    // for(int i = 0; i < m*k; i++) A[i] = fabs( A[i] );
+    // for(int i = 0; i < k*n; i++) B[i] = fabs( B[i] );
+    // for(int i = 0; i < m*n; i++) C[i] = fabs( C[i] );
+    // cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans, m,n,k, -3.0*DBL_EPSILON*n, A,m, B,k, 1, C,m);
+    // for(int i = 0; i < m*n; i++) {
+    //     if(C[i] > 0) {
+    //         printf("FAILURE: error in matrix multiply exceeds an acceptable margin\n");
+    //         return -1;
+    //     }
+    // }
 
     // Housekeeping
     free(A);

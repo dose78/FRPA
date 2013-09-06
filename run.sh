@@ -41,7 +41,7 @@ elif [ "$1" = "carma" ]; then
 elif [ "$1" = "strassen" ]; then
     icc $FLAGS -I framework -o harness algorithms/strassen/strassen_harness.cpp algorithms/strassen/StrassenProblem.cpp $FRAMEWORK
     echo -e "\e[0;32mrunning STRASSEN...\e[0m"
-    ./harness 1024 1024 1024
+    ./harness 8192 8192 8192
 
 elif [ "$1" = "trsm" ]; then
     icc $FLAGS -I framework -I algorithms/mult -o harness algorithms/trsm/trsm_harness.cpp algorithms/trsm/TrsmProblem.cpp algorithms/mult/MultProblem.cpp $FRAMEWORK
