@@ -1,7 +1,6 @@
 #include "harness.h"
 #include "StrassenProblem.h"
 #include "framework.h"
-#include "memory.h"
 
 void initialize(int m, int k, int n, double* A, double* B, double* C) {
     for(int i = 0; i < m*k; i++) A[i] = 2 * drand48() - 1;
