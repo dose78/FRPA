@@ -40,7 +40,6 @@ int main(int argc, char **argv) {
     printf("STRASSEN: %d,%d,%d,%f\n", m, k, n, Gflop_s);
 
     // check for correctness
-    // memset(C, 0, sizeof(double) * m * n); //if commented, this tests C = A*B instead of C += A*B or C = A*B
     // cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans, m,n,k, -1, A,m, B,k, 1, C,m);
     // for(int i = 0; i < m*k; i++) A[i] = fabs( A[i] );
     // for(int i = 0; i < k*n; i++) B[i] = fabs( B[i] );

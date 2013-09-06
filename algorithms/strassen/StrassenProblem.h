@@ -13,6 +13,8 @@ public:
 
 private:
     void matrix_add(int m, int n, double *A, int lda, double *B, int ldb, double *C, int ldc);
+    void matrix_add_inplace(int m, int n, double *A, int lda, double *B, int ldb);
     void matrix_subtract(int m, int n, double *A, int lda, double *B, int ldb, double *C, int ldc);
+    void matrix_subtract_inplace(int m, int n, double *A, int lda, double *B, int ldb);
     void matrix_copy(int m, int n, double *A, int lda, double *B, int ldb);
 };

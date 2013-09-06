@@ -67,6 +67,10 @@ void StrassenProblem::merge(std::vector<Problem*> problems) {
     double *C12 = C + m*n/2;
     double *C22 = C + m*n/2 + m/2;
 
+    double *U1 = (double*) malloc(m/2 * n/2 * sizeof(double));
+    double *U2 = (double*) malloc(m/2 * n/2 * sizeof(double));
+    double *U3 = (double*) malloc(m/2 * n/2 * sizeof(double));
+
     double *Q[7];
     int counter = 0;
     for(std::vector<Problem*>::iterator problemIterator = problems.begin(); problemIterator != problems.end(); problemIterator++) {
@@ -74,14 +78,18 @@ void StrassenProblem::merge(std::vector<Problem*> problems) {
         Q[counter++] = (double*)problem->C;
     }
 
-    matrix_add_inplace(m/2, n/2, Q[0], m/2, Q[3], m/2); // U1 = Q[3]
-    matrix_add_inplace(m/2, n/2, Q[3], m/2, Q[4], m/2); // U2 = Q[4]
-    matrix_add(m/2, n/2, Q[4], m/2, Q[2], m/2, C22, m);
-    matrix_add_inplace(m/2, n/2, Q[3], m/2, Q[2], m/2); // U3 = Q[2]
-    matrix_add(m/2, n/2, Q[0], m/2, Q[1], m/2, C11, m);
-    matrix_add(m/2, n/2, Q[2], m/2, Q[5], m/2, C12, m);
-    matrix_subtract(m/2, n/2, Q[4], m/2, Q[6], m/2, C21, m);
+    matrix_add(m/2, n/2, Q[0], m/2, Q[3], m/2, U1, m/2);
+    matrix_add(m/2, n/2, U1, m/2, Q[4], m/2, U2, m/2);
+    matrix_add(m/2, n/2, U1, m/2, Q[2], m/2, U3, m/2);
 
+    matrix_add(m/2, n/2, Q[0], m/2, Q[1], m/2, C11, m);
+    matrix_add(m/2, n/2, U3, m/2, Q[5], m/2, C12, m);
+    matrix_subtract(m/2, n/2, U2, m/2, Q[6], m/2, C21, m);
+    matrix_add(m/2, n/2, U2, m/2, Q[2], m/2, C22, m);
+
+    free(U1);
+    free(U2);
+    free(U3);
     for(std::vector<Problem*>::iterator problemIterator = problems.begin(); problemIterator != problems.end(); problemIterator++) {
         StrassenProblem *problem = (StrassenProblem*)*problemIterator;
         free(problem->A);
@@ -99,26 +107,12 @@ void StrassenProblem::matrix_add(int m, int n, double *A, int lda, double *B, in
     }
 }
 
-// B <- A + B
-void StrassenProblem::matrix_add_inplace(int m, int n, double *A, int lda, double *B, int ldb) {
-    for (int i = 0; i < n; i++) {
-        cblas_daxpy(m, 1, A + i*lda, 1, B + i*ldb, 1);
-    }
-}
-
 // C <- A - B
 void StrassenProblem::matrix_subtract(int m, int n, double *A, int lda, double *B, int ldb, double *C, int ldc) {
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
             C[i*ldc + j] = A[i*lda + j] - B[i*ldb + j];
         }
-    }
-}
-
-// B <- A - B
-void StrassenProblem::matrix_subtract_inplace(int m, int n, double *A, int lda, double *B, int ldb) {
-    for (int i = 0; i < n; i++) {
-        cblas_daxpy(m, -1, A + i*lda, 1, B + i*ldb, 1);
     }
 }
 
