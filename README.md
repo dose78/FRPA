@@ -17,7 +17,6 @@ bash run.sh mergesort
 
 ### Tracking memory allocation
 *  Include "memory.h" and "debug.h" in the *algorithm*Problem.cpp file (see SyrkProblem.cpp for a simple example)
-*  Include "memory.h' in the running/testing harness for your algorithm (see syrk_harness.cpp for a simple example)
 *  Add "-DDEBUG" to the flags in the run.sh file
 
 ### Requirements

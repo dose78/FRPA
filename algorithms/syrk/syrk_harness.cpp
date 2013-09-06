@@ -1,7 +1,6 @@
 #include "harness.h"
 #include "framework.h"
 #include "SyrkProblem.h"
-#include "memory.h"
 
 void initialize(double *C, double *A, double *C2, double *A2, int n) {
     srand48(time(NULL));
