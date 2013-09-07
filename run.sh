@@ -16,18 +16,32 @@ FLAGS="-O3 -mkl -ipo -xHOST -no-prec-div -fno-strict-aliasing -fno-omit-frame-po
 # FLAGS="-O3 -mkl -ipo -xHOST -no-prec-div -fno-strict-aliasing -fno-omit-frame-pointer -DDEBUG"
 FRAMEWORK="framework/framework.cpp framework/Task.cpp framework/Problem.cpp framework/memory.cpp"
 
-if [ "$1" = "quicksort" ]; then
-    icc $FLAGS -I framework -o harness algorithms/quicksort/quicksort_harness.cpp algorithms/quicksort/QuicksortProblem.cpp $FRAMEWORK
+if [ "$1" = "strassen" ]; then
+    icc $FLAGS -I framework -o harness algorithms/strassen/*.cpp $FRAMEWORK
+    echo -e "\e[0;32mrunning STRASSEN DOUBLE PRECISION...\e[0m"
+    ./harness 1024 1024 1024
+    # ./harness 4096 4096 4096
+    # ./harness 8192 8192 8192
+
+elif [ "$1" = "strassen-single" ]; then
+    icc $FLAGS -I framework -o harness algorithms/strassen-single/*.cpp $FRAMEWORK
+    echo -e "\e[0;32mrunning STRASSEN SINGLE PRECISION...\e[0m"
+    ./harness 1024 1024 1024
+    # ./harness 4096 4096 4096
+    # ./harness 8192 8192 8192
+
+elif [ "$1" = "quicksort" ]; then
+    icc $FLAGS -I framework -o harness algorithms/quicksort/*.cpp $FRAMEWORK
     echo -e "\e[0;32mrunning quicksort...\e[0m"
     ./harness
 
 elif [ "$1" = "mergesort" ]; then
-    icc $FLAGS -I framework -o harness algorithms/mergesort/mergesort_harness.cpp algorithms/mergesort/MergesortProblem.cpp $FRAMEWORK
+    icc $FLAGS -I framework -o harness algorithms/mergesort/*.cpp $FRAMEWORK
     echo -e "\e[0;32mrunning mergesort...\e[0m"
     ./harness
 
 elif [ "$1" = "carma" ]; then
-    icc  -I framework $FLAGS -I framework -o harness  algorithms/carma/carma_harness.cpp algorithms/carma/CarmaProblem.cpp $FRAMEWORK
+    icc  -I framework $FLAGS -I framework -o harness  algorithms/carma/*.cpp $FRAMEWORK
     echo -e "\e[0;32mrunning CARMA...\e[0m"
     MIN_K=1024
     MAX_K=1024
@@ -38,31 +52,25 @@ elif [ "$1" = "carma" ]; then
         done
     done
 
-elif [ "$1" = "strassen" ]; then
-    icc $FLAGS -I framework -o harness algorithms/strassen/strassen_harness.cpp algorithms/strassen/StrassenProblem.cpp $FRAMEWORK
-    echo -e "\e[0;32mrunning STRASSEN...\e[0m"
-    ./harness 1024 1024 1024
-    # ./harness 4096 4096 4096
-    # ./harness 8192 8192 8192
-
 elif [ "$1" = "trsm" ]; then
-    icc $FLAGS -I framework -I algorithms/mult -o harness algorithms/trsm/trsm_harness.cpp algorithms/trsm/TrsmProblem.cpp algorithms/mult/MultProblem.cpp $FRAMEWORK
+    icc $FLAGS -I framework -I algorithms/mult -o harness algorithms/trsm/*.cpp algorithms/mult/*.cpp $FRAMEWORK
     echo -e "\e[0;32mrunning TRSM...\e[0m"
     ./harness
 
 elif [ "$1" = "syrk" ]; then
-    icc $FLAGS -I framework -I algorithms/mult -o harness algorithms/syrk/syrk_harness.cpp algorithms/syrk/SyrkProblem.cpp algorithms/mult/MultProblem.cpp $FRAMEWORK
+    icc $FLAGS -I framework -I algorithms/mult -o harness algorithms/syrk/*.cpp algorithms/mult/*.cpp $FRAMEWORK
     echo -e "\e[0;32mrunning SYRK...\e[0m"
     ./harness
 
 elif [ "$1" = "cholesky" ]; then
-    icc $FLAGS -I framework -I algorithms/mult -I algorithms/trsm -I algorithms/syrk -o harness algorithms/cholesky/cholesky_harness.cpp algorithms/trsm/TrsmProblem.cpp algorithms/mult/MultProblem.cpp algorithms/cholesky/CholeskyProblem.cpp algorithms/syrk/SyrkProblem.cpp $FRAMEWORK
+    icc $FLAGS -I framework -I algorithms/mult -I algorithms/trsm -I algorithms/syrk -o harness algorithms/cholesky/*.cpp algorithms/trsm/*.cpp algorithms/mult/*.cpp  algorithms/syrk/*.cpp $FRAMEWORK
     echo -e "\e[0;32mrunning CHOLESKY...\e[0m"
     ./harness
 
 elif [ "$1" = "delaunay" ]; then
     DEL_DIR="algorithms/delaunay"
     icc $FLAGS -I framework -o harness $DEL_DIR/delaunay_harness.cpp $DEL_DIR/DelaunayProblem.cpp $DEL_DIR/edge.cpp $DEL_DIR/library.cpp $DEL_DIR/mypred.cpp $DEL_DIR/predicates.c $FRAMEWORK
+    # icc $FLAGS -I framework -o harness algorithms/delaunay/*.cpp algorithms/delaunay/*.c $FRAMEWORK
     echo -e "\e[0;32mrunning DELAUNAY...\e[0m"
     ./harness
     # To benchmark the sequential version: make && ./main -t 1 -r 1000000 (the last part is the problem size)

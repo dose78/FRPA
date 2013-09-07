@@ -1,8 +1,8 @@
-#include "StrassenProblem.h"
+#include "StrassenSingleNaiveProblem.h"
 #include "debug.h"
 #include "memory.h"
 
-StrassenProblem::StrassenProblem(int m, int k, int n, double *A, double *B, double *C) {
+StrassenSingleNaiveProblem::StrassenSingleNaiveProblem(int m, int k, int n, float *A, float *B, float *C) {
     this->m = m;
     this->n = n;
     this->k = k;
@@ -11,31 +11,31 @@ StrassenProblem::StrassenProblem(int m, int k, int n, double *A, double *B, doub
     this->C = C;
 }
 
-void StrassenProblem::runBaseCase() {
-    cblas_dgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, m, n, k, 1, A, m, B, k, 0, C, m);
+void StrassenSingleNaiveProblem::runBaseCase() {
+    cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, m, n, k, 1, A, m, B, k, 0, C, m);
 }
 
-std::vector<Task*> StrassenProblem::split() {
+std::vector<Task*> StrassenSingleNaiveProblem::split() {
     int T_m = m/2;
     int T_n = k/2;
     int S_m = k/2;
     int S_n = n/2;
 
-    double *A11 = A;
-    double *A21 = A + m/2;
-    double *A12 = A + m*k/2;
-    double *A22 = A + m*k/2 + m/2;
+    float *A11 = A;
+    float *A21 = A + m/2;
+    float *A12 = A + m*k/2;
+    float *A22 = A + m*k/2 + m/2;
 
-    double *B11 = B;
-    double *B21 = B + k/2;
-    double *B12 = B + k*n/2;
-    double *B22 = B + k*n/2 + k/2;
+    float *B11 = B;
+    float *B21 = B + k/2;
+    float *B12 = B + k*n/2;
+    float *B22 = B + k*n/2 + k/2;
 
-    double *T[7], *S[7], *Q[7];
+    float *T[7], *S[7], *Q[7];
     for (int i = 0; i < 7; i++) {
-        T[i] = (double*) malloc(T_m * T_n * sizeof(double));
-        S[i] = (double*) malloc(S_m * S_n * sizeof(double));
-        Q[i] = (double*) malloc(T_m * S_n * sizeof(double));
+        T[i] = (float*) malloc(T_m * T_n * sizeof(float));
+        S[i] = (float*) malloc(S_m * S_n * sizeof(float));
+        Q[i] = (float*) malloc(T_m * S_n * sizeof(float));
     }
 
     matrix_copy(T_m, T_n, T[0], T_m, A11, m);
@@ -56,26 +56,26 @@ std::vector<Task*> StrassenProblem::split() {
 
     std::vector<Task*> tasks (7);
     for (int i = 0; i < 7; i++) {
-        tasks[i] = new Task(new StrassenProblem(T_m, T_n, S_n, T[i], S[i], Q[i]));
+        tasks[i] = new Task(new StrassenSingleNaiveProblem(T_m, T_n, S_n, T[i], S[i], Q[i]));
     }
     return tasks;
 }
 
-void StrassenProblem::merge(std::vector<Problem*> problems) {
-    double *C11 = C;
-    double *C21 = C + m/2;
-    double *C12 = C + m*n/2;
-    double *C22 = C + m*n/2 + m/2;
+void StrassenSingleNaiveProblem::merge(std::vector<Problem*> problems) {
+    float *C11 = C;
+    float *C21 = C + m/2;
+    float *C12 = C + m*n/2;
+    float *C22 = C + m*n/2 + m/2;
 
-    double *U1 = (double*) malloc(m/2 * n/2 * sizeof(double));
-    double *U2 = (double*) malloc(m/2 * n/2 * sizeof(double));
-    double *U3 = (double*) malloc(m/2 * n/2 * sizeof(double));
+    float *U1 = (float*) malloc(m/2 * n/2 * sizeof(float));
+    float *U2 = (float*) malloc(m/2 * n/2 * sizeof(float));
+    float *U3 = (float*) malloc(m/2 * n/2 * sizeof(float));
 
-    double *Q[7];
+    float *Q[7];
     int counter = 0;
     for(std::vector<Problem*>::iterator problemIterator = problems.begin(); problemIterator != problems.end(); problemIterator++) {
-        StrassenProblem *problem = (StrassenProblem*)*problemIterator;
-        Q[counter++] = (double*)problem->C;
+        StrassenSingleNaiveProblem *problem = (StrassenSingleNaiveProblem*)*problemIterator;
+        Q[counter++] = (float*)problem->C;
     }
 
     matrix_add(m/2, n/2, Q[0], m/2, Q[3], m/2, U1, m/2);
@@ -91,7 +91,7 @@ void StrassenProblem::merge(std::vector<Problem*> problems) {
     free(U2);
     free(U3);
     for(std::vector<Problem*>::iterator problemIterator = problems.begin(); problemIterator != problems.end(); problemIterator++) {
-        StrassenProblem *problem = (StrassenProblem*)*problemIterator;
+        StrassenSingleNaiveProblem *problem = (StrassenSingleNaiveProblem*)*problemIterator;
         free(problem->A);
         free(problem->B);
         free(problem->C);
@@ -99,7 +99,7 @@ void StrassenProblem::merge(std::vector<Problem*> problems) {
 }
 
 // C <- A + B
-void StrassenProblem::matrix_add(int m, int n, double *A, int lda, double *B, int ldb, double *C, int ldc) {
+void StrassenSingleNaiveProblem::matrix_add(int m, int n, float *A, int lda, float *B, int ldb, float *C, int ldc) {
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
             C[i*ldc + j] = A[i*lda + j] + B[i*ldb + j];
@@ -108,7 +108,7 @@ void StrassenProblem::matrix_add(int m, int n, double *A, int lda, double *B, in
 }
 
 // C <- A - B
-void StrassenProblem::matrix_subtract(int m, int n, double *A, int lda, double *B, int ldb, double *C, int ldc) {
+void StrassenSingleNaiveProblem::matrix_subtract(int m, int n, float *A, int lda, float *B, int ldb, float *C, int ldc) {
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
             C[i*ldc + j] = A[i*lda + j] - B[i*ldb + j];
@@ -117,8 +117,8 @@ void StrassenProblem::matrix_subtract(int m, int n, double *A, int lda, double *
 }
 
 // Copy B into A
-void StrassenProblem::matrix_copy(int m, int n, double *A, int lda, double *B, int ldb) {
+void StrassenSingleNaiveProblem::matrix_copy(int m, int n, float *A, int lda, float *B, int ldb) {
     for (int i = 0; i < n; i++) {
-        memcpy(A + i*lda, B + i*ldb, m * sizeof(double));
+        memcpy(A + i*lda, B + i*ldb, m * sizeof(float));
     }
 }
