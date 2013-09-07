@@ -42,6 +42,7 @@ elif [ "$1" = "strassen" ]; then
     icc $FLAGS -I framework -o harness algorithms/strassen/strassen_harness.cpp algorithms/strassen/StrassenProblem.cpp $FRAMEWORK
     echo -e "\e[0;32mrunning STRASSEN...\e[0m"
     ./harness 1024 1024 1024
+    # ./harness 4096 4096 4096
     # ./harness 8192 8192 8192
 
 elif [ "$1" = "trsm" ]; then

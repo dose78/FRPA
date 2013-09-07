@@ -4,9 +4,9 @@
 
 class StrassenProblem: public Problem {
 public:
-    int n, m,k;
+    int n, m, k, lda, ldb, ldc;
     double *A, *B, *C;
-    StrassenProblem(int m, int k, int n, double *A, double *B, double *C);
+    StrassenProblem(int m, int k, int n, double *A, int lda, double *B, int ldb, double *C, int ldc);
     void runBaseCase();
     std::vector<Task*> split();
     void merge(std::vector<Problem*> subproblems);

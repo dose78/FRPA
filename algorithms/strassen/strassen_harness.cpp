@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
     B = (double*) malloc(k * n * sizeof(double));
     C = (double*) malloc(m * n * sizeof(double));
     initialize(m, k, n, A, B, C);
-    StrassenProblem* problem = new StrassenProblem(m, k, n, A, B, C);
+    StrassenProblem* problem = new StrassenProblem(m, k, n, A, m, B, k, C, m);
 
     // Time multiplication
     struct timeval start, end;
