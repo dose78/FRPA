@@ -1,6 +1,6 @@
 #include "harness.h"
-#include "CarmaProblem.h"
 #include "framework.h"
+#include "CarmaProblem.h"
 
 #define NUM_SMALL_MATRICES_MAX 5000
 
