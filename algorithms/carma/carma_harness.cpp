@@ -105,8 +105,8 @@ int main(int argc, char **argv) {
     printf("CARMA,%d,%d,%d,%f\n", m, k, n, Gflop_s);
 
 #ifdef DEBUG
-	printf("memory: %d bytes\n", Memory::current);
-	printf("max: %d bytes\n", Memory::max);
+	printf("memory: %d bytes\n", Memory::getMem());
+	printf("max: %d bytes\n", Memory::getMax());
 #endif
 
     // check for correctness

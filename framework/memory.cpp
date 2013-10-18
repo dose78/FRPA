@@ -1,50 +1,35 @@
+#include <cstdio>
 #include "memory.h"
 
-bool Memory::initialized = false;
-int Memory::current;
-int Memory::max;
-pthread_mutex_t Memory::m1;
-std::map<void*, size_t> Memory::track;
+int Memory::current = 0;
+int Memory::max = 0;
 
 void* Memory::malloctrack(size_t size) {
-	int n = 0;
-	if (!initialized) {
-		current = 0;
-		max = 0;
-		pthread_mutex_init(&m1, 0);
-		initialized = true;
-	}
+    int new_usage = __sync_add_and_fetch(&current, size);
+    while(new_usage > max) {
+        int local_max = max;
+        if (new_usage > local_max) {
+            __sync_bool_compare_and_swap(&max, local_max, new_usage);
+        }
+    }
 
-	__sync_fetch_and_add(&current, size);
-
-	pthread_mutex_lock(&m1);
-	//current += size;
-	if (current > max)
-		max = current;
-	pthread_mutex_unlock(&m1);
-	
-	void* ptr = malloc(size);
-	track[ptr] = size;
-
-	return ptr;
+    void* ptr = malloc(sizeof(size_t) + size);
+    size_t* ptr2 = (size_t*)ptr;
+    *ptr2 = size;
+    return (void*)(ptr2 + 1);
 }
 
 void Memory::freetrack(void* ptr) {
-	if (ptr == 0)
-		return;
-
-	size_t size = track[ptr];
-	size = -size;
-
-	__sync_fetch_and_add(&current, size);
-
-	//pthread_mutex_lock(&m1);
-	//current -= size;
-	//pthread_mutex_unlock(&m1);
-	
-	free(ptr);
+    size_t* ptr2 = (size_t*)ptr - 1;
+    size_t size = *ptr2;
+    __sync_sub_and_fetch(&current, size);
+    free((void*)ptr2);
 }
 
 int Memory::getMem() {
-	return current;
+    return current;
+}
+
+int Memory::getMax() {
+    return max;
 }

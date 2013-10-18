@@ -12,16 +12,23 @@ fi
 
 echo -e "\e[0;32mcompiling...\e[0m"
 
-FLAGS="-O3 -mkl -ipo -xHOST -no-prec-div -fno-strict-aliasing -fno-omit-frame-pointer"
-# FLAGS="-O3 -mkl -ipo -xHOST -no-prec-div -fno-strict-aliasing -fno-omit-frame-pointer -DDEBUG"
+# FLAGS="-O3 -mkl -ipo -xHOST -no-prec-div -fno-strict-aliasing -fno-omit-frame-pointer"
+FLAGS="-O3 -mkl -ipo -xHOST -no-prec-div -fno-strict-aliasing -fno-omit-frame-pointer -DDEBUG"
 FRAMEWORK="framework/framework.cpp framework/Task.cpp framework/Problem.cpp framework/memory.cpp"
 
 if [ "$1" = "strassen" ]; then
     icc $FLAGS -I framework -o harness algorithms/strassen/*.cpp $FRAMEWORK
     echo -e "\e[0;32mrunning STRASSEN DOUBLE PRECISION...\e[0m"
-    ./harness 1024 1024 1024
-    # ./harness 4096 4096 4096
-    # ./harness 8192 8192 8192
+    for (( i=1; i<=3; i+=1 )); do
+        ./harness 1024 1024 1024
+        # ./harness 4096 4096 4096
+        # ./harness 8192 8192 8192
+    done
+
+elif [ "$1" = "test" ]; then
+    icc  -I framework $FLAGS -I framework -o harness  algorithms/test/*.cpp $FRAMEWORK
+    echo -e "\e[0;32mrunning TEST...\e[0m"
+    ./harness 10
 
 elif [ "$1" = "strassen-single" ]; then
     icc $FLAGS -I framework -o harness algorithms/strassen-single/*.cpp $FRAMEWORK
@@ -44,8 +51,8 @@ elif [ "$1" = "carma" ]; then
     icc  -I framework $FLAGS -I framework -o harness  algorithms/carma/*.cpp $FRAMEWORK
     echo -e "\e[0;32mrunning CARMA...\e[0m"
     MIN_K=1024
-    MAX_K=1024
-    ITERATIONS=2
+    MAX_K=2048
+    ITERATIONS=1
     for (( k=$MIN_K; k<=$MAX_K; k*=2 )); do
         for (( i=1; i<=$ITERATIONS; i+=1 )); do
             ./harness 1024 $k 1024
