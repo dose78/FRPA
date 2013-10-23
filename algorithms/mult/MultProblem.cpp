@@ -1,5 +1,5 @@
 #include "MultProblem.h"
-#include "debug.h"
+#include "memorytracking.h"
 
 MultProblem::MultProblem(double *C, double *A, double *B, int n, int ldc, int lda, int ldb) {
     this->C = C;

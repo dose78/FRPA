@@ -1,5 +1,6 @@
-#include "TrsmProblem.h"
 #include "MultProblem.h"
+#include "TrsmProblem.h"
+#include "memorytracking.h"
 
 TrsmProblem::TrsmProblem(double *X, double *T, int n, int N) {
     this->X = X;

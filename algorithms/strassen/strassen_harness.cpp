@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
     // Time multiplication
     struct timeval start, end;
     gettimeofday(&start, NULL);
-    solve(problem);
+    Framework::solve(problem);
     gettimeofday(&end, NULL);
     double seconds = (end.tv_sec - start.tv_sec) + 1.0e-6 * (end.tv_usec - start.tv_usec);
     double Gflop_s = 2e-9 * m * k * n / seconds;
@@ -60,9 +60,5 @@ int main(int argc, char **argv) {
     free(C);
     delete problem;
     fclose(f);
-    #ifdef DEBUG
-        printf("memory: %d bytes\n", Memory::current);
-        printf("max: %d bytes\n", Memory::max);
-    #endif
     return 0;
 }

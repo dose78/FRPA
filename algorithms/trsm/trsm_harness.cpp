@@ -1,6 +1,6 @@
-#include "TrsmProblem.h"
-#include "framework.h"
 #include "harness.h"
+#include "framework.h"
+#include "TrsmProblem.h"
 
 void initialize(int n, double *X, double *T, double *X_test, double *T_test) {
     srand48(time(NULL));
@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
         // Timing
         struct timeval start, end;
         gettimeofday(&start, NULL);
-        solve(problem);
+        Framework::solve(problem);
         gettimeofday(&end, NULL);
         double seconds = (end.tv_sec - start.tv_sec) + 1.0e-6 * (end.tv_usec - start.tv_usec);
         fprintf(f,"TRSM: %d,%f\n", n, seconds);

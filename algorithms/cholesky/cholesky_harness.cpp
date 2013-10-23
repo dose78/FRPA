@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
     // Timing
     struct timeval start, end;
     gettimeofday(&start, NULL);
-    solve(problem);
+    Framework::solve(problem);
     gettimeofday(&end, NULL);
     double seconds = (end.tv_sec - start.tv_sec) + 1.0e-6 * (end.tv_usec - start.tv_usec);
     fprintf(f,"Cholesky: %d,%f\n", n, seconds);

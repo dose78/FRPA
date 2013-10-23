@@ -25,11 +25,6 @@ if [ "$1" = "strassen" ]; then
         # ./harness 8192 8192 8192
     done
 
-elif [ "$1" = "test" ]; then
-    icc  -I framework $FLAGS -I framework -o harness  algorithms/test/*.cpp $FRAMEWORK
-    echo -e "\e[0;32mrunning TEST...\e[0m"
-    ./harness 10
-
 elif [ "$1" = "strassen-single" ]; then
     icc $FLAGS -I framework -o harness algorithms/strassen-single/*.cpp $FRAMEWORK
     echo -e "\e[0;32mrunning STRASSEN SINGLE PRECISION...\e[0m"
@@ -81,6 +76,11 @@ elif [ "$1" = "delaunay" ]; then
     echo -e "\e[0;32mrunning DELAUNAY...\e[0m"
     ./harness
     # To benchmark the sequential version: make && ./main -t 1 -r 1000000 (the last part is the problem size)
+
+elif [ "$1" = "test" ]; then
+    icc  -I framework $FLAGS -I framework -o harness  algorithms/test/*.cpp $FRAMEWORK
+    echo -e "\e[0;32mrunning TEST...\e[0m"
+    ./harness 10
 
 else
     echo -e "\e[0;31mERROR: Algorithm not found\e[0m"

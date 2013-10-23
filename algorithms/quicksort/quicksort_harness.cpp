@@ -1,6 +1,6 @@
 #include "harness.h"
-#include "QuicksortProblem.h"
 #include "framework.h"
+#include "QuicksortProblem.h"
 
 #define MIN_LENGTH 1024
 #define MAX_LENGTH 1024*1024
@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
 
         struct timeval start, end;
         gettimeofday(&start, NULL);
-        solve(problem);
+        Framework::solve(problem);
         gettimeofday(&end, NULL);
         double quicksortTime = (end.tv_sec - start.tv_sec) + 1.0e-6 * (end.tv_usec - start.tv_usec);
 

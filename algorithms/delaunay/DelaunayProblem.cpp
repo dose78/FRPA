@@ -1,4 +1,5 @@
 #include "DelaunayProblem.h"
+#include "memorytracking.h"
 
 DelaunayProblem::DelaunayProblem( std::vector<Point*> *S, int begin, int end ) {
   this->S = S;

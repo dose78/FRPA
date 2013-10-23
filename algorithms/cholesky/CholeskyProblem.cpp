@@ -1,6 +1,7 @@
-#include "CholeskyProblem.h"
 #include "TrsmProblem.h"
 #include "SyrkProblem.h"
+#include "CholeskyProblem.h"
+#include "memorytracking.h"
 
 CholeskyProblem::CholeskyProblem(double *A, int n, int N) {
     this->A = A;

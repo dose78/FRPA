@@ -18,12 +18,7 @@ int main(int argc, char **argv) {
     for(int i = 0; i < n; i++) A[i] = 2 * drand48() - 1;
     TestProblem* problem = new TestProblem(A, n);
 
-    solve(problem); // warmup
-
-    #ifdef DEBUG
-        printf("memory: %d bytes\n", Memory::getMem());
-        printf("max: %d bytes\n", Memory::getMax());
-    #endif
+    Framework::solve(problem);
 
     // Housekeeping
     free(A);

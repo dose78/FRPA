@@ -44,14 +44,14 @@ QuadEdge *makeEdge() {
 void splice( QuadEdge *a, QuadEdge *b ) {
   QuadEdge *alpha = a->Onext()->Rot();
   QuadEdge *beta = b->Onext()->Rot();
-  
+
   QuadEdge *temp = a->Onext();
   a->setOnext( b->Onext() );
   b->setOnext( temp );
 
   temp = alpha->Onext();
   alpha->setOnext( beta->Onext() );
-  beta->setOnext( temp );  
+  beta->setOnext( temp );
 }
 
 QuadEdge *connect( QuadEdge *a, QuadEdge *b ) {

@@ -1,6 +1,5 @@
 #include "StrassenProblem.h"
-#include "debug.h"
-#include "memory.h"
+#include "memorytracking.h"
 
 StrassenProblem::StrassenProblem(int m, int k, int n, double *A, int lda, double *B, int ldb, double *C, int ldc) {
     this->m = m;

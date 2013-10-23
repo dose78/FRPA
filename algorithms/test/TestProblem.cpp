@@ -1,6 +1,5 @@
 #include "TestProblem.h"
-#include "debug.h"
-#include "memory.h"
+#include "memorytracking.h"
 
 TestProblem::TestProblem(double *A, int n) {
     this->A = A;

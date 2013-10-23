@@ -14,13 +14,12 @@ int main() {
     }
 
     double stime = read_timer();
-    
+
     DelaunayProblem *problem = new DelaunayProblem(&S, 0, n);
-    
-    solve(problem);
+
+    Framework::solve(problem);
 
     printf("%d time %f\n", n, read_timer()-stime);
-	printf("memory: %d bytes\n", problem->memory);
     delete problem;
   }
 }

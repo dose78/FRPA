@@ -1,4 +1,5 @@
 #include "QuicksortProblem.h"
+#include "memorytracking.h"
 
 int cmp(const void *x, const void *y) {
     double xx = *(double*)x, yy = *(double*)y;
