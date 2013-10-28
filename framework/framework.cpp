@@ -65,12 +65,11 @@ void Framework::solve(Problem* problem, int depth) {
     deleteSubproblems(subproblems);
 
     // Memory Tracking
-    #ifdef DEBUG
-        if (depth == 0) {
-            printf("memory current: %d bytes\n", Memory::getMem());
-            printf("memory max: %d bytes\n", Memory::getMax());
-        }
-    #endif
+    if (depth == 0) {
+        #ifdef DEBUG
+            Memory::printAll();
+        #endif
+    }
 }
 
 void Framework::solve(Problem* problem) {

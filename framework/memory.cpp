@@ -3,8 +3,10 @@
 
 int Memory::current = 0;
 int Memory::max = 0;
+int Memory::total = 0;
 
 void* Memory::malloctrack(size_t size) {
+    __sync_fetch_and_add(&total, size);
     int new_usage = __sync_add_and_fetch(&current, size);
     while(new_usage > max) {
         int local_max = max;
@@ -26,10 +28,30 @@ void Memory::freetrack(void* ptr) {
     free((void*)ptr2);
 }
 
-int Memory::getMem() {
+int Memory::getCurrent() {
     return current;
 }
 
 int Memory::getMax() {
     return max;
+}
+
+int Memory::getTotal() {
+    return total;
+}
+
+void Memory::printCurrent() {
+    printf("memory current: %d bytes\n", getCurrent());
+}
+
+void Memory::printMax() {
+    printf("memory max: %d bytes\n", getMax());
+}
+
+void Memory::printTotal() {
+    printf("memory total: %d bytes\n", getTotal());
+}
+
+void Memory::printAll() {
+    printf("memory current: %d, max: %d, total: %d (bytes)\n", getCurrent(), getMax(), getTotal());
 }
