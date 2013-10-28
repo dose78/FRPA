@@ -1,14 +1,14 @@
 #include "framework.h"
 #include "debug.h"
-#include <memory.h>
 
-// std::vector<int> interleaving = ...;
+std::string Framework::interleaving = "BB"; // Determines depth and interleaving
 
 bool Framework::shouldRunBaseCase(int depth) {
     // TODO something smart
     // int numCPU = sysconf( _SC_NPROCESSORS_ONLN );
     // return (depth >= (log2(numCPU)) - 0.01);
-    return depth >= 2; // for strassen
+    // return depth >= 2; // for strassen
+    return depth >= interleaving.size();
 }
 
 void Framework::solveTask(Task* task, int depth) {
@@ -45,8 +45,7 @@ void Framework::solve(Problem* problem, int depth) {
     }
 
     std::vector<Problem*> subproblems;
-    int BFS[] = { 1, 1, 1, 1, 1 };
-    if (BFS[depth]) {
+    if (interleaving[depth] == 'B') {
         std::vector<Task*> tasks = problem->split();
         for(std::vector<Task*>::iterator taskIterator = tasks.begin(); taskIterator != tasks.end(); taskIterator++) {
             Task *task = *taskIterator;
