@@ -1,9 +1,9 @@
 #include <cstdio>
 #include "memory.h"
 
-int Memory::current = 0;
-int Memory::max = 0;
-int Memory::total = 0;
+long Memory::current = 0;
+long Memory::max = 0;
+long Memory::total = 0;
 
 void* Memory::malloctrack(size_t size) {
     __sync_fetch_and_add(&total, size);
@@ -28,30 +28,30 @@ void Memory::freetrack(void* ptr) {
     free((void*)ptr2);
 }
 
-int Memory::getCurrent() {
+long Memory::getCurrent() {
     return current;
 }
 
-int Memory::getMax() {
+long Memory::getMax() {
     return max;
 }
 
-int Memory::getTotal() {
+long Memory::getTotal() {
     return total;
 }
 
 void Memory::printCurrent() {
-    printf("memory current: %d bytes\n", getCurrent());
+    printf("memory current: %ld bytes\n", getCurrent());
 }
 
 void Memory::printMax() {
-    printf("memory max: %d bytes\n", getMax());
+    printf("memory max: %ld bytes\n", getMax());
 }
 
 void Memory::printTotal() {
-    printf("memory total: %d bytes\n", getTotal());
+    printf("memory total: %ld bytes\n", getTotal());
 }
 
 void Memory::printAll() {
-    printf("memory current: %d, max: %d, total: %d (bytes)\n", getCurrent(), getMax(), getTotal());
+    printf("memory current: %ld, max: %ld, total: %ld (bytes)\n", getCurrent(), getMax(), getTotal());
 }

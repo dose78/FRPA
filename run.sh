@@ -19,10 +19,17 @@ FRAMEWORK="framework/framework.cpp framework/Task.cpp framework/Problem.cpp fram
 if [ "$1" = "strassen" ]; then
     icc $FLAGS -I framework -o harness algorithms/strassen/*.cpp $FRAMEWORK
     echo -e "\e[0;32mrunning STRASSEN DOUBLE PRECISION...\e[0m"
-    for (( i=1; i<=3; i+=1 )); do
+    for (( i=1; i<=1; i+=1 )); do
         ./harness 1024 1024 1024
-        # ./harness 4096 4096 4096
-        # ./harness 8192 8192 8192
+    done
+    for (( i=1; i<=1; i+=1 )); do
+        ./harness 2048 2048 2048
+    done
+    for (( i=1; i<=1; i+=1 )); do
+        ./harness 4096 4096 4096
+    done
+    for (( i=1; i<=1; i+=1 )); do
+        ./harness 8192 8192 8192
     done
 
 elif [ "$1" = "strassen-single" ]; then
