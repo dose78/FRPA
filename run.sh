@@ -23,18 +23,18 @@ function mem_sweep {
     for (( i=1; i<=1; i+=1 )); do
         ./harness 2048 2048 2048 $interleaving
     done
-    # for (( i=1; i<=1; i+=1 )); do
-    #     ./harness 4096 4096 4096 $interleaving
-    # done
-    # for (( i=1; i<=1; i+=1 )); do
-    #     ./harness 8192 8192 8192 $interleaving
-    # done
-    # for (( i=1; i<=1; i+=1 )); do
-    #     ./harness 16384 16384 16384 $interleaving
-    # done
-    # for (( i=1; i<=1; i+=1 )); do
-    #     ./harness 32768 32768 32768 $interleaving
-    # done
+    for (( i=1; i<=1; i+=1 )); do
+        ./harness 4096 4096 4096 $interleaving
+    done
+    for (( i=1; i<=1; i+=1 )); do
+        ./harness 8192 8192 8192 $interleaving
+    done
+    for (( i=1; i<=1; i+=1 )); do
+        ./harness 16384 16384 16384 $interleaving
+    done
+    for (( i=1; i<=1; i+=1 )); do
+        ./harness 32768 32768 32768 $interleaving
+    done
 }
 
 function timing_sweep {
@@ -45,18 +45,18 @@ function timing_sweep {
     for (( i=1; i<=10; i+=1 )); do
         ./harness 2048 2048 2048 $interleaving
     done
-    # for (( i=1; i<=10; i+=1 )); do
-    #     ./harness 4096 4096 4096 $interleaving
-    # done
-    # for (( i=1; i<=10; i+=1 )); do
-    #     ./harness 8192 8192 8192 $interleaving
-    # done
-    # for (( i=1; i<=5; i+=1 )); do
-    #     ./harness 16384 16384 16384 $interleaving
-    # done
-    # for (( i=1; i<=1; i+=1 )); do
-    #     ./harness 32768 32768 32768 $interleaving
-    # done
+    for (( i=1; i<=10; i+=1 )); do
+        ./harness 4096 4096 4096 $interleaving
+    done
+    for (( i=1; i<=10; i+=1 )); do
+        ./harness 8192 8192 8192 $interleaving
+    done
+    for (( i=1; i<=5; i+=1 )); do
+        ./harness 16384 16384 16384 $interleaving
+    done
+    for (( i=1; i<=1; i+=1 )); do
+        ./harness 32768 32768 32768 $interleaving
+    done
 }
 
 if [ "$1" = "strassen" ]; then
