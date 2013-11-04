@@ -10,8 +10,8 @@ if [ `dnsdomainname | tr [:upper:] [:lower:]` = "millennium.berkeley.edu" ]; the
     source /opt/intel/bin/iccvars.sh intel64
 fi
 
-# FLAGS="-O3 -mkl -ipo -xHOST -no-prec-div -fno-strict-aliasing -fno-omit-frame-pointer"
-FLAGS="-O3 -mkl -ipo -xHOST -no-prec-div -fno-strict-aliasing -fno-omit-frame-pointer -DDEBUG"
+FLAGS="-O3 -mkl -ipo -xHOST -no-prec-div -fno-strict-aliasing -fno-omit-frame-pointer"
+DFLAGS="-O3 -mkl -ipo -xHOST -no-prec-div -fno-strict-aliasing -fno-omit-frame-pointer -DDEBUG"
 FRAMEWORK="framework/framework.cpp framework/Task.cpp framework/Problem.cpp framework/memory.cpp"
 rm -rf harness
 
@@ -61,11 +61,10 @@ function timing_sweep {
 
 if [ "$1" = "strassen" ]; then
     echo -e "\e[0;32mrunning STRASSEN DOUBLE PRECISION...\e[0m"
-    FLAGS="-O3 -mkl -ipo -xHOST -no-prec-div -fno-strict-aliasing -fno-omit-frame-pointer -DDEBUG"
-    icc $FLAGS -I framework -o harness algorithms/strassen/*.cpp $FRAMEWORK
+
+    icc $DFLAGS -I framework -o harness algorithms/strassen/*.cpp $FRAMEWORK
     mem_sweep BB
 
-    FLAGS="-O3 -mkl -ipo -xHOST -no-prec-div -fno-strict-aliasing -fno-omit-frame-pointer"
     icc $FLAGS -I framework -o harness algorithms/strassen/*.cpp $FRAMEWORK
     timing_sweep BB
 
