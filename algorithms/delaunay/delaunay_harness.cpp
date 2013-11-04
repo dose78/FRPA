@@ -2,7 +2,9 @@
 #include "framework.h"
 #include "DelaunayProblem.h"
 
-int main() {
+int main(int argc, char **argv) {
+  std::string interleaving = argv[1];
+
   for( int n = 1000; n <= 10000000; n *= 10 ) {
 
     std::vector<Point*> S;
@@ -17,7 +19,7 @@ int main() {
 
     DelaunayProblem *problem = new DelaunayProblem(&S, 0, n);
 
-    Framework::solve(problem);
+    Framework::solve(problem, interleaving);
 
     printf("%d time %f\n", n, read_timer()-stime);
     delete problem;

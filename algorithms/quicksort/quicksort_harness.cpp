@@ -24,6 +24,8 @@ int cmp_harness(const void *x, const void *y) {
 
 int main(int argc, char **argv) {
     srand48(time(NULL));
+
+    std::string interleaving = argv[1];
     FILE *f = fopen("quicksort.csv","w");
     fprintf(f,"length,quicksort,built in,ratio\n");
     printf("length\tquicksort\tbuilt in\tratio\n");
@@ -38,7 +40,7 @@ int main(int argc, char **argv) {
 
         struct timeval start, end;
         gettimeofday(&start, NULL);
-        Framework::solve(problem);
+        Framework::solve(problem, interleaving);
         gettimeofday(&end, NULL);
         double quicksortTime = (end.tv_sec - start.tv_sec) + 1.0e-6 * (end.tv_usec - start.tv_usec);
 

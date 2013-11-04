@@ -7,3 +7,4 @@
 #include <sys/time.h>
 #include <mkl.h>
 #include <memory.h>
+#include <string>

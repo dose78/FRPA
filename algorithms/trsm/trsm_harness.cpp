@@ -9,6 +9,7 @@ void initialize(int n, double *X, double *T, double *X_test, double *T_test) {
 }
 
 int main(int argc, char **argv) {
+    std::string interleaving = argv[1];
     FILE *f = fopen("trsm.csv","a");
 
     for(int n = 64; n <= 16384; n *= 2) {
@@ -22,11 +23,17 @@ int main(int argc, char **argv) {
         // Timing
         struct timeval start, end;
         gettimeofday(&start, NULL);
-        Framework::solve(problem);
+        Framework::solve(problem, interleaving);
         gettimeofday(&end, NULL);
         double seconds = (end.tv_sec - start.tv_sec) + 1.0e-6 * (end.tv_usec - start.tv_usec);
-        fprintf(f,"TRSM: %d,%f\n", n, seconds);
-        printf("TRSM: %d,%f\n", n, seconds);
+
+        #ifdef DEBUG
+            fprintf(f,"TRSM: %d,%s,%f,%ld,%ld\n", n, interleaving.c_str(), seconds, Memory::getMax(), Memory::getTotal());
+            printf("TRSM: %d,%s,%f,%ld,%ld\n", n, interleaving.c_str(), seconds, Memory::getMax(), Memory::getTotal());
+        #else
+            fprintf(f,"TRSM: %d,%s,%f\n", n, interleaving.c_str(), seconds);
+            printf("TRSM: %d,%s,%f\n", n, interleaving.c_str(), seconds);
+        #endif
 
         // Correctness
         cblas_dtrsm(CblasColMajor, CblasRight, CblasLower, CblasTrans, CblasNonUnit, n, n, 1.0, T_test, n, X_test, n);

@@ -20,7 +20,7 @@ void initialize(int m, int k, int n, double* A, double* B, double* C) {
     for(int i = 0; i < m*n; i++) C[i] = 2 * drand48() - 1;
 }
 
-int guess_num_matrices(int m, int k, int n) {
+int guess_num_matrices(int m, int k, int n, std::string interleaving) {
     double *A[NUM_SMALL_MATRICES_MAX], *B[NUM_SMALL_MATRICES_MAX], *C[NUM_SMALL_MATRICES_MAX];
     double *cacheClearer = (double*) malloc(100000000); //L3 cahce is less than 100MB
     CarmaProblem** problems = (CarmaProblem**) malloc(NUM_SMALL_MATRICES_MAX * sizeof(CarmaProblem*));
@@ -41,8 +41,7 @@ int guess_num_matrices(int m, int k, int n) {
         clearCache(cacheClearer); // clear cache
         gettimeofday(&start, NULL);
         for (int i = 0; i < num_matrices; i++) {
-            Framework::solve(problems[i]);
-            // cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans, m,n,k, -1, A[0],m, B[0],k, 1, C[0],m);
+            Framework::solve(problems[i], interleaving);
         }
         gettimeofday(&end, NULL);
         double seconds = (end.tv_sec - start.tv_sec) + 1.0e-6 * (end.tv_usec - start.tv_usec);
@@ -70,11 +69,12 @@ int main(int argc, char **argv) {
     int m = atoi(argv[1]);
     int k = atoi(argv[2]);
     int n = atoi(argv[3]);
+    std::string interleaving = argv[4];
 
     FILE *f = fopen("carma.csv","a");
 
     // discover how many multiplies are needed
-    int num_matrices = guess_num_matrices(m, k, n);
+    int num_matrices = guess_num_matrices(m, k, n, interleaving);
     // printf("Num matrices required: %d\n", num_matrices);
 
     CarmaProblem** problems = (CarmaProblem**) malloc(num_matrices * sizeof(CarmaProblem*));
@@ -89,11 +89,11 @@ int main(int argc, char **argv) {
 
     // Time CARMA
     struct timeval start, end;
-    Framework::solve(problems[0]); // warmup
+    Framework::solve(problems[0], interleaving); // warmup
     clearCache(cacheClearer); // clear cache
     gettimeofday(&start, NULL);
     for (int i = 0; i < num_matrices; i++) {
-        Framework::solve(problems[i]);
+        Framework::solve(problems[i], interleaving);
     }
     gettimeofday(&end, NULL);
     double seconds = (end.tv_sec - start.tv_sec) + 1.0e-6 * (end.tv_usec - start.tv_usec);
@@ -101,12 +101,18 @@ int main(int argc, char **argv) {
     if (seconds < 0.02) {
         printf("WARNING: Matrix size may be too small to produce accurate timing data\n");
     }
-    fprintf(f,"CARMA: %d,%d,%d,%f\n", m, k, n, Gflop_s);
-    printf("CARMA,%d,%d,%d,%f\n", m, k, n, Gflop_s);
+
+    #ifdef DEBUG
+        fprintf(f,"CARMA: %d,%d,%d,%s,%f,%ld,%ld\n", m, k, n, interleaving.c_str(), Gflop_s, Memory::getMax(), Memory::getTotal());
+        printf("CARMA: %d,%d,%d,%s,%f,%ld,%ld\n", m, k, n, interleaving.c_str(), Gflop_s, Memory::getMax(), Memory::getTotal());
+    #else
+        fprintf(f,"CARMA: %d,%d,%d,%s,%f\n", m, k, n, interleaving.c_str(), Gflop_s);
+        printf("CARMA: %d,%d,%d,%s,%f\n", m, k, n, interleaving.c_str(), Gflop_s);
+    #endif
 
     // check for correctness
     // memset(C[0], 0, sizeof(double) * m * n); //if commented, this tests C = A*B instead of C += A*B or C = A*B
-    // Framework::solve(problems[0]);
+    // Framework::solve(problems[0], interleaving);
     // cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans, m,n,k, -1, A[0],m, B[0],k, 1, C[0],m);
     // for(int i = 0; i < m*k; i++) A[0][i] = fabs( A[0][i] );
     // for(int i = 0; i < k*n; i++) B[0][i] = fabs( B[0][i] );

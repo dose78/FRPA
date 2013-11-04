@@ -9,6 +9,7 @@ void initialize(double *C, double *A, double *C2, double *A2, int n) {
 }
 
 int main(int argc, char **argv) {
+    std::string interleaving = argv[1];
     FILE *f = fopen("syrk.csv","a");
     int n = 1024;
 
@@ -21,11 +22,17 @@ int main(int argc, char **argv) {
 
     struct timeval start, end;
     gettimeofday(&start, NULL);
-    Framework::solve(problem);
+    Framework::solve(problem, interleaving);
     gettimeofday(&end, NULL);
     double seconds = (end.tv_sec - start.tv_sec) + 1.0e-6 * (end.tv_usec - start.tv_usec);
-    fprintf(f,"SYRK: %d,%f\n", n, seconds);
-    printf("SYRK: %d,%f\n", n, seconds);
+
+    #ifdef DEBUG
+        fprintf(f,"SYRK: %d,%s,%f,%ld,%ld\n", n, interleaving.c_str(), seconds, Memory::getMax(), Memory::getTotal());
+        printf("SYRK: %d,%s,%f,%ld,%ld\n", n, interleaving.c_str(), seconds, Memory::getMax(), Memory::getTotal());
+    #else
+        fprintf(f,"SYRK: %d,%s,%f\n", n, interleaving.c_str(), seconds);
+        printf("SYRK: %d,%s,%f\n", n, interleaving.c_str(), seconds);
+    #endif
 
     // Correctness
     cblas_dsyrk(CblasColMajor, CblasLower, CblasNoTrans, n, n, -1.0, A2, n, 1.0, C2, n);

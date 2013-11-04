@@ -28,6 +28,12 @@ void Memory::freetrack(void* ptr) {
     free((void*)ptr2);
 }
 
+void Memory::reset() {
+    current = 0;
+    max = 0;
+    total = 0;
+}
+
 long Memory::getCurrent() {
     return current;
 }

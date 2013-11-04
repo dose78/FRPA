@@ -12,7 +12,7 @@
 
 class Framework {
 public:
-    static void solve(Problem* problem);
+    static void solve(Problem* problem, std::string customInterleaving);
 
 private:
     static std::string interleaving;

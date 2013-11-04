@@ -1,13 +1,9 @@
 #include "framework.h"
 #include "debug.h"
 
-std::string Framework::interleaving = "BB"; // Determines depth and interleaving
+std::string Framework::interleaving; // Determines depth and interleaving
 
 bool Framework::shouldRunBaseCase(int depth) {
-    // TODO something smart
-    // int numCPU = sysconf( _SC_NPROCESSORS_ONLN );
-    // return (depth >= (log2(numCPU)) - 0.01);
-    // return depth >= 2; // for strassen
     return depth >= interleaving.size();
 }
 
@@ -65,13 +61,15 @@ void Framework::solve(Problem* problem, int depth) {
     deleteSubproblems(subproblems);
 
     // Memory Tracking
-    if (depth == 0) {
-        #ifdef DEBUG
-            Memory::printAll();
-        #endif
-    }
+    // if (depth == 0) {
+    //     #ifdef DEBUG
+    //         Memory::printAll();
+    //     #endif
+    // }
 }
 
-void Framework::solve(Problem* problem) {
+void Framework::solve(Problem* problem, std::string interleaving) {
+    Framework::interleaving = interleaving;
+    Memory::reset();
     solve(problem, 0);
 }

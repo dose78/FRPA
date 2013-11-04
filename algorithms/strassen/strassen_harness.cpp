@@ -15,6 +15,7 @@ int main(int argc, char **argv) {
     int m = atoi(argv[1]);
     int k = atoi(argv[2]);
     int n = atoi(argv[3]);
+    std::string interleaving = argv[4];
 
     FILE *f = fopen("strassen-double.csv","a");
 
@@ -29,7 +30,7 @@ int main(int argc, char **argv) {
     // Time multiplication
     struct timeval start, end;
     gettimeofday(&start, NULL);
-    Framework::solve(problem);
+    Framework::solve(problem, interleaving);
     gettimeofday(&end, NULL);
     double seconds = (end.tv_sec - start.tv_sec) + 1.0e-6 * (end.tv_usec - start.tv_usec);
     double Gflop_s = 2e-9 * m * k * n / seconds;
@@ -38,8 +39,14 @@ int main(int argc, char **argv) {
         printf("WARNING: Matrix size may be too small to produce accurate timing data\n");
     }
 
-    fprintf(f,"STRASSEN-DOUBLE: %d,%d,%d,%f\n", m, k, n, Gflop_s);
-    printf("STRASSEN-DOUBLE: %d,%d,%d,%f\n", m, k, n, Gflop_s);
+    #ifdef DEBUG
+        fprintf(f,"STRASSEN-DOUBLE: %d,%d,%d,%s,%f,%ld,%ld\n", m, k, n, interleaving.c_str(), Gflop_s, Memory::getMax(), Memory::getTotal());
+        printf("STRASSEN-DOUBLE: %d,%d,%d,%s,%f,%ld,%ld\n", m, k, n, interleaving.c_str(), Gflop_s, Memory::getMax(), Memory::getTotal());
+    #else
+        fprintf(f,"STRASSEN-DOUBLE: %d,%d,%d,%s,%f\n", m, k, n, interleaving.c_str(), Gflop_s);
+        printf("STRASSEN-DOUBLE: %d,%d,%d,%s,%f\n", m, k, n, interleaving.c_str(), Gflop_s);
+    #endif
+
 
     // check for correctness
     // cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans, m,n,k, -1, A,m, B,k, 1, C,m);

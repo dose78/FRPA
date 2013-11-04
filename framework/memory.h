@@ -8,6 +8,7 @@ class Memory {
 public:
     static void* malloctrack(size_t size);
     static void freetrack(void* ptr);
+    static void reset();
     static long getCurrent();
     static long getMax();
     static long getTotal();
