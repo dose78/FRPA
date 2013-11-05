@@ -13,49 +13,37 @@ fi
 FLAGS="-O3 -mkl -ipo -xHOST -no-prec-div -fno-strict-aliasing -fno-omit-frame-pointer"
 DFLAGS="-O3 -mkl -ipo -xHOST -no-prec-div -fno-strict-aliasing -fno-omit-frame-pointer -DDEBUG"
 FRAMEWORK="framework/framework.cpp framework/Task.cpp framework/Problem.cpp framework/memory.cpp"
-rm -rf harness
 
 function mem_sweep {
     interleaving=$1
-    for (( i=1; i<=1; i+=1 )); do
-        ./harness 1024 1024 1024 $interleaving
-    done
-    for (( i=1; i<=1; i+=1 )); do
-        ./harness 2048 2048 2048 $interleaving
-    done
-    for (( i=1; i<=1; i+=1 )); do
-        ./harness 4096 4096 4096 $interleaving
-    done
-    for (( i=1; i<=1; i+=1 )); do
-        ./harness 8192 8192 8192 $interleaving
-    done
-    for (( i=1; i<=1; i+=1 )); do
-        ./harness 16384 16384 16384 $interleaving
-    done
-    for (( i=1; i<=1; i+=1 )); do
-        ./harness 32768 32768 32768 $interleaving
+    for (( n=1024; n<=20480; n+=1024 )); do
+        for (( i=1; i<=1; i+=1 )); do
+            ./harness $n $n $n $interleaving
+        done
     done
 }
 
 function timing_sweep {
     interleaving=$1
-    for (( i=1; i<=10; i+=1 )); do
-        ./harness 1024 1024 1024 $interleaving
+    for (( n=1024; n<8192; n+=1024 )); do
+        for (( i=1; i<=10; i+=1 )); do
+            ./harness $n $n $n $interleaving
+        done
     done
-    for (( i=1; i<=10; i+=1 )); do
-        ./harness 2048 2048 2048 $interleaving
+    for (( n=8192; n<11264; n+=1024 )); do
+        for (( i=1; i<=5; i+=1 )); do
+            ./harness $n $n $n $interleaving
+        done
     done
-    for (( i=1; i<=10; i+=1 )); do
-        ./harness 4096 4096 4096 $interleaving
+    for (( n=11264; n<17408; n+=1024 )); do
+        for (( i=1; i<=3; i+=1 )); do
+            ./harness $n $n $n $interleaving
+        done
     done
-    for (( i=1; i<=10; i+=1 )); do
-        ./harness 8192 8192 8192 $interleaving
-    done
-    for (( i=1; i<=5; i+=1 )); do
-        ./harness 16384 16384 16384 $interleaving
-    done
-    for (( i=1; i<=1; i+=1 )); do
-        ./harness 32768 32768 32768 $interleaving
+    for (( n=17408; n<=20480; n+=1024 )); do
+        for (( i=1; i<=1; i+=1 )); do
+            ./harness $n $n $n $interleaving
+        done
     done
 }
 
@@ -63,10 +51,10 @@ if [ "$1" = "strassen" ]; then
     echo -e "\e[0;32mrunning STRASSEN DOUBLE PRECISION...\e[0m"
 
     icc $DFLAGS -I framework -o harness algorithms/strassen/*.cpp $FRAMEWORK
-    mem_sweep BB
+    mem_sweep BDB
 
     icc $FLAGS -I framework -o harness algorithms/strassen/*.cpp $FRAMEWORK
-    timing_sweep BB
+    timing_sweep BDB
 
 elif [ "$1" = "strassen-single" ]; then
     icc $FLAGS -I framework -o harness algorithms/strassen-single/*.cpp $FRAMEWORK
@@ -129,5 +117,7 @@ else
 fi
 
 rm -rf harness
+echo -e "\e[01;32mThis trial took" $SECONDS "seconds\e[0m"
+echo "This trial took" $SECONDS "seconds" > timing.txt
 
 # /reserve/unreserve.me
