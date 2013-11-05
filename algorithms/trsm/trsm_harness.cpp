@@ -28,11 +28,11 @@ int main(int argc, char **argv) {
         double seconds = (end.tv_sec - start.tv_sec) + 1.0e-6 * (end.tv_usec - start.tv_usec);
 
         #ifdef DEBUG
-            fprintf(f,"TRSM: %d,%s,%f,%ld,%ld\n", n, interleaving.c_str(), seconds, Memory::getMax(), Memory::getTotal());
-            printf("TRSM: %d,%s,%f,%ld,%ld\n", n, interleaving.c_str(), seconds, Memory::getMax(), Memory::getTotal());
+            fprintf(f,"TRSM,%d,%s,%f,%ld,%ld\n", n, interleaving.c_str(), seconds, Memory::getMax(), Memory::getTotal());
+            printf("TRSM,%d,%s,%f,%ld,%ld\n", n, interleaving.c_str(), seconds, Memory::getMax(), Memory::getTotal());
         #else
-            fprintf(f,"TRSM: %d,%s,%f\n", n, interleaving.c_str(), seconds);
-            printf("TRSM: %d,%s,%f\n", n, interleaving.c_str(), seconds);
+            fprintf(f,"TRSM,%d,%s,%f\n", n, interleaving.c_str(), seconds);
+            printf("TRSM,%d,%s,%f\n", n, interleaving.c_str(), seconds);
         #endif
 
         // Correctness

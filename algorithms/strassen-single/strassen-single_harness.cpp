@@ -40,11 +40,11 @@ int main(int argc, char **argv) {
     }
 
     #ifdef DEBUG
-        fprintf(f,"STRASSEN-SINGLE: %d,%d,%d,%s,%f,%ld,%ld\n", m, k, n, interleaving.c_str(), Gflop_s, Memory::getMax(), Memory::getTotal());
-        printf("STRASSEN-SINGLE: %d,%d,%d,%s,%f,%ld,%ld\n", m, k, n, interleaving.c_str(), Gflop_s, Memory::getMax(), Memory::getTotal());
+        fprintf(f,"STRASSEN-SINGLE,%d,%d,%d,%s,%f,%ld,%ld\n", m, k, n, interleaving.c_str(), Gflop_s, Memory::getMax(), Memory::getTotal());
+        printf("STRASSEN-SINGLE,%d,%d,%d,%s,%f,%ld,%ld\n", m, k, n, interleaving.c_str(), Gflop_s, Memory::getMax(), Memory::getTotal());
     #else
-        fprintf(f,"STRASSEN-SINGLE: %d,%d,%d,%s,%f\n", m, k, n, interleaving.c_str(), Gflop_s);
-        printf("STRASSEN-SINGLE: %d,%d,%d,%s,%f\n", m, k, n, interleaving.c_str(), Gflop_s);
+        fprintf(f,"STRASSEN-SINGLE,%d,%d,%d,%s,%f\n", m, k, n, interleaving.c_str(), Gflop_s);
+        printf("STRASSEN-SINGLE,%d,%d,%d,%s,%f\n", m, k, n, interleaving.c_str(), Gflop_s);
     #endif
 
     // check for correctness
