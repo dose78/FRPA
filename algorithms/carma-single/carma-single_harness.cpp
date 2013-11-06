@@ -1,8 +1,8 @@
 #include "harness.h"
 #include "framework.h"
-#include "CarmaProblem.h"
+#include "CarmaSingleProblem.h"
 
-void initialize(int m, int k, int n, double* A, double* B, double* C) {
+void initialize(int m, int k, int n, float* A, float* B, float* C) {
     for(int i = 0; i < m*k; i++) A[i] = 2 * drand48() - 1;
     for(int i = 0; i < k*n; i++) B[i] = 2 * drand48() - 1;
     for(int i = 0; i < m*n; i++) C[i] = 2 * drand48() - 1;
@@ -16,14 +16,14 @@ int main(int argc, char **argv) {
     int n = atoi(argv[3]);
     std::string interleaving = argv[4];
 
-    FILE *f = fopen("carma.csv","a");
+    FILE *f = fopen("carma-single.csv","a");
 
-    double *A, *B, *C;
-    A = (double*) malloc(m * k * sizeof(double));
-    B = (double*) malloc(k * n * sizeof(double));
-    C = (double*) malloc(m * n * sizeof(double));
+    float *A, *B, *C;
+    A = (float*) malloc(m * k * sizeof(float));
+    B = (float*) malloc(k * n * sizeof(float));
+    C = (float*) malloc(m * n * sizeof(float));
     initialize(m, k, n, A, B, C);
-    CarmaProblem* problem = new CarmaProblem(m, k, m, k, n, m, A, B, C);
+    CarmaSingleProblem* problem = new CarmaSingleProblem(m, k, m, k, n, m, A, B, C);
 
     // Time CARMA
     struct timeval start, end;
@@ -38,11 +38,11 @@ int main(int argc, char **argv) {
     }
 
     #ifdef DEBUG
-        fprintf(f,"CARMA,%d,%d,%d,%s,%f,%ld,%ld\n", m, k, n, interleaving.c_str(), Gflop_s, Memory::getMax(), Memory::getTotal());
-        printf("CARMA,%d,%d,%d,%s,%f,%ld,%ld\n", m, k, n, interleaving.c_str(), Gflop_s, Memory::getMax(), Memory::getTotal());
+        fprintf(f,"CARMA-SINGLE,%d,%d,%d,%s,%f,%ld,%ld\n", m, k, n, interleaving.c_str(), Gflop_s, Memory::getMax(), Memory::getTotal());
+        printf("CARMA-SINGLE,%d,%d,%d,%s,%f,%ld,%ld\n", m, k, n, interleaving.c_str(), Gflop_s, Memory::getMax(), Memory::getTotal());
     #else
-        fprintf(f,"CARMA,%d,%d,%d,%s,%f\n", m, k, n, interleaving.c_str(), Gflop_s);
-        printf("CARMA,%d,%d,%d,%s,%f\n", m, k, n, interleaving.c_str(), Gflop_s);
+        fprintf(f,"CARMA-SINGLE,%d,%d,%d,%s,%f\n", m, k, n, interleaving.c_str(), Gflop_s);
+        printf("CARMA-SINGLE,%d,%d,%d,%s,%f\n", m, k, n, interleaving.c_str(), Gflop_s);
     #endif
 
     // Housekeeping
