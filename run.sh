@@ -17,9 +17,7 @@ FRAMEWORK="framework/framework.cpp framework/Task.cpp framework/Problem.cpp fram
 function mem_sweep_strassen {
     interleaving=$1
     for (( n=1024; n<=20480; n+=1024 )); do
-        for (( i=1; i<=1; i+=1 )); do
-            ./harness $n $n $n $interleaving
-        done
+        ./harness $n $n $n $interleaving
     done
 }
 
@@ -49,17 +47,39 @@ function timing_sweep_strassen {
 
 function mem_sweep_carma {
     interleaving=$1
+
+    #exponential
     for (( n=64; n<=16777216; n*=2 )); do
-        for (( i=1; i<=1; i+=1 )); do
-            ./harness 64 $n 64 $interleaving
-        done
+        ./harness 64 $n 64 $interleaving
+    done
+
+    # linear
+    for (( n=1048576; n<=16777216; n+=1048576 )); do
+        ./harness 64 $n 64 $interleaving
     done
 }
 
 function timing_sweep_carma {
     interleaving=$1
-    for (( n=16777216; n<=16777216; n*=2 )); do
+
+    #exponential
+    for (( n=64; n<=8388608; n*=2 )); do
         for (( i=1; i<=10; i+=1 )); do
+            ./harness 64 $n 64 $interleaving
+        done
+    done
+    for (( i=1; i<=5; i+=1 )); do
+        ./harness 64 16777216 64 $interleaving
+    done
+
+    #linear
+    for (( n=1048576; n<10485760; n+=1048576 )); do
+        for (( i=1; i<=5; i+=1 )); do
+            ./harness 64 $n 64 $interleaving
+        done
+    done
+    for (( n=10485760; n<16777216; n+=1048576 )); do
+        for (( i=1; i<=3; i+=1 )); do
             ./harness 64 $n 64 $interleaving
         done
     done
