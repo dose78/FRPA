@@ -15,132 +15,123 @@ DFLAGS="-O3 -mkl -ipo -xHOST -no-prec-div -fno-strict-aliasing -fno-omit-frame-p
 FRAMEWORK="framework/framework.cpp framework/Task.cpp framework/Problem.cpp framework/memory.cpp"
 
 function mem_sweep_strassen {
-    interleaving=$1
-    for (( n=1024; n<=20480; n+=1024 )); do
-        ./harness $n $n $n $interleaving
+    a=("$@")
+    for interleaving in "${a[@]}" ; do
+        for (( n=1024; n<=20480; n+=1024 )); do
+            ./harness $n $n $n $interleaving
+        done
     done
 }
 
 function timing_sweep_strassen {
-    interleaving=$1
-    for (( n=1024; n<8192; n+=1024 )); do
-        for (( i=1; i<=10; i+=1 )); do
-            ./harness $n $n $n $interleaving
+    a=("$@")
+    for interleaving in "${a[@]}" ; do
+        for (( n=1024; n<8192; n+=1024 )); do
+            for (( i=1; i<=10; i+=1 )); do
+                ./harness $n $n $n $interleaving
+            done
         done
-    done
-    for (( n=8192; n<11264; n+=1024 )); do
-        for (( i=1; i<=5; i+=1 )); do
-            ./harness $n $n $n $interleaving
-        done
-    done
-    for (( n=11264; n<17408; n+=1024 )); do
-        for (( i=1; i<=3; i+=1 )); do
-            ./harness $n $n $n $interleaving
-        done
-    done
-    for (( n=17408; n<=20480; n+=1024 )); do
-        for (( i=1; i<=1; i+=1 )); do
-            ./harness $n $n $n $interleaving
+        for (( n=8192; n<=20480; n+=1024 )); do
+            for (( i=1; i<=5; i+=1 )); do
+                ./harness $n $n $n $interleaving
+            done
         done
     done
 }
 
 function mem_sweep_carma {
-    interleaving=$1
+    a=("$@")
+    for interleaving in "${a[@]}" ; do
+        #exponential
+        for (( n=64; n<=16777216; n*=2 )); do
+            ./harness 64 $n 64 $interleaving
+        done
 
-    #exponential
-    for (( n=64; n<=16777216; n*=2 )); do
-        ./harness 64 $n 64 $interleaving
-    done
-
-    # linear
-    for (( n=1048576; n<=16777216; n+=1048576 )); do
-        ./harness 64 $n 64 $interleaving
+        # linear
+        for (( n=1048576; n<=16777216; n+=1048576 )); do
+            ./harness 64 $n 64 $interleaving
+        done
     done
 }
 
 function timing_sweep_carma {
-    interleaving=$1
-
-    #exponential
-    for (( n=64; n<=8388608; n*=2 )); do
-        for (( i=1; i<=10; i+=1 )); do
-            ./harness 64 $n 64 $interleaving
+    a=("$@")
+    for interleaving in "${a[@]}" ; do
+        #exponential
+        for (( n=64; n<=8388608; n*=2 )); do
+            for (( i=1; i<=10; i+=1 )); do
+                ./harness 64 $n 64 $interleaving
+            done
         done
-    done
-    for (( i=1; i<=5; i+=1 )); do
-        ./harness 64 16777216 64 $interleaving
-    done
-
-    #linear
-    for (( n=1048576; n<10485760; n+=1048576 )); do
         for (( i=1; i<=5; i+=1 )); do
-            ./harness 64 $n 64 $interleaving
+            ./harness 64 16777216 64 $interleaving
         done
-    done
-    for (( n=10485760; n<16777216; n+=1048576 )); do
-        for (( i=1; i<=3; i+=1 )); do
-            ./harness 64 $n 64 $interleaving
+
+        #linear
+        for (( n=1048576; n<10485760; n+=1048576 )); do
+            for (( i=1; i<=5; i+=1 )); do
+                ./harness 64 $n 64 $interleaving
+            done
+        done
+        for (( n=10485760; n<16777216; n+=1048576 )); do
+            for (( i=1; i<=3; i+=1 )); do
+                ./harness 64 $n 64 $interleaving
+            done
         done
     done
 }
 
 if [ "$1" = "strassen" ]; then
     echo -e "\e[0;32mrunning STRASSEN DOUBLE PRECISION...\e[0m"
+    interleavings=(BB DBB BDB BBD DBDB BDDB BDBD BBB DBBB BDBB BBDB BBBD BDBDB BBDBD BBBB BDBBB BBDBB BBBDB BDBDBB BBDBDB)
 
     icc $DFLAGS -I framework -o harness algorithms/strassen/*.cpp $FRAMEWORK
-    mem_sweep_strassen BB
-    mem_sweep_strassen DBB
-    mem_sweep_strassen BDB
-    mem_sweep_strassen BBD
-    mem_sweep_strassen DBBB
-    mem_sweep_strassen BDBB
-    mem_sweep_strassen BBDB
-    mem_sweep_strassen BBBD
-    mem_sweep_strassen DBDB
-    mem_sweep_strassen BDDB
-    mem_sweep_strassen BDBDB
+    mem_sweep_strassen "${interleavings[@]}"
 
     icc $FLAGS -I framework -o harness algorithms/strassen/*.cpp $FRAMEWORK
-    timing_sweep_strassen BB
-    timing_sweep_strassen DBB
-    timing_sweep_strassen BDB
-    timing_sweep_strassen BBD
-    timing_sweep_strassen DBBB
-    timing_sweep_strassen BDBB
-    timing_sweep_strassen BBDB
-    timing_sweep_strassen BBBD
-    timing_sweep_strassen DBDB
-    timing_sweep_strassen BDDB
-    timing_sweep_strassen BDBDB
+    timing_sweep_strassen "${interleavings[@]}"
 
 elif [ "$1" = "strassen-single" ]; then
     echo -e "\e[0;32mrunning STRASSEN SINGLE PRECISION...\e[0m"
+    interleavings=(BB DBB BDB BBD DBDB BDDB BDBD BBB DBBB BDBB BBDB BBBD BDBDB BBDBD BBBB BDBBB BBDBB BBBDB BDBDBB BBDBDB)
 
     icc $DFLAGS -I framework -o harness algorithms/strassen-single/*.cpp $FRAMEWORK
-    mem_sweep_strassen BB
+    mem_sweep_strassen "${interleavings[@]}"
 
     icc $FLAGS -I framework -o harness algorithms/strassen-single/*.cpp $FRAMEWORK
-    timing_sweep_strassen BB
+    timing_sweep_strassen "${interleavings[@]}"
 
 elif [ "$1" = "carma" ]; then
     echo -e "\e[0;32mrunning CARMA...\e[0m"
+    interleavings4=(BBBBB DBBBBB BDBBBB BBBDBB BBBBBD BDBDBBB BBBDBDB BBBBBDD BBBDDBB BBDBDBDB BDBDBDBB BDBDBDBDB)
+    interleavings5=(BBBBBB BBBDBBB BDBBBBB BBBBBDB BBBBDBB BBBBBBD DBBBBBB BBBDDBBB BBDBBDBB BBBBBDDB BBDBDBDBB BDBDBDBDBDB)
+    interleavings6=(BBBBBBB BBBDBBBB BBBBDBBB BDBBBBBB BBBBBBDB BBBBBBBD DBBBBBBB BBBDBDBBB BBDBBBDBB BDBBBBBDB BBBBBBDDB BBBDBDBDBB BDBDBDBDBDBDB)
 
     icc  -I framework $DFLAGS -I framework -o harness  algorithms/carma/*.cpp $FRAMEWORK
-    mem_sweep_carma BBBBB
+    mem_sweep_carma "${interleavings4[@]}"
+    mem_sweep_carma "${interleavings5[@]}"
+    mem_sweep_carma "${interleavings6[@]}"
 
     icc  -I framework $FLAGS -I framework -o harness  algorithms/carma/*.cpp $FRAMEWORK
-    timing_sweep_carma BBBBB
-
+    timing_sweep_carma "${interleavings4[@]}"
+    timing_sweep_carma "${interleavings5[@]}"
+    timing_sweep_carma "${interleavings6[@]}"
 
 elif [ "$1" = "carma-single" ]; then
     echo -e "\e[0;32mrunning CARMA SINGLE...\e[0m"
+    interleavings4=(BBBBB DBBBBB BDBBBB BBBDBB BBBBBD BDBDBBB BBBDBDB BBBBBDD BBBDDBB BBDBDBDB BDBDBDBB BDBDBDBDB)
+    interleavings5=(BBBBBB BBBDBBB BDBBBBB BBBBBDB BBBBDBB BBBBBBD DBBBBBB BBBDDBBB BBDBBDBB BBBBBDDB BBDBDBDBB BDBDBDBDBDB)
+    interleavings6=(BBBBBBB BBBDBBBB BBBBDBBB BDBBBBBB BBBBBBDB BBBBBBBD DBBBBBBB BBBDBDBBB BBDBBBDBB BDBBBBBDB BBBBBBDDB BBBDBDBDBB BDBDBDBDBDBDB)
 
     icc  -I framework $DFLAGS -I framework -o harness  algorithms/carma-single/*.cpp $FRAMEWORK
-    mem_sweep_carma BBBBB
+    mem_sweep_carma "${interleavings4[@]}"
+    mem_sweep_carma "${interleavings5[@]}"
+    mem_sweep_carma "${interleavings6[@]}"
 
     icc  -I framework $FLAGS -I framework -o harness  algorithms/carma-single/*.cpp $FRAMEWORK
-    timing_sweep_carma BBBBB
+    timing_sweep_carma "${interleavings4[@]}"
+    timing_sweep_carma "${interleavings5[@]}"
+    timing_sweep_carma "${interleavings6[@]}"
 
 elif [ "$1" = "quicksort" ]; then
     icc $FLAGS -I framework -o harness algorithms/quicksort/*.cpp $FRAMEWORK
