@@ -50,6 +50,7 @@ with open(temp_filename,'wb') as temp_file:
     temp_file.write(result[0] + "," + ",".join(result[1])+"\n")
 
 os.system("sort -t, -k 1,1 -k 5,5 -k 2,2n -k 3,3n -k 4,4n " + temp_filename + " -o " + temp_filename)
+os.system("sort -t, -k 1,1 -k 5,5 -k 2,2n -k 3,3n -k 4,4n " + mem_filename + " -o " + mem_filename)
 
 with open(output_filename,'wb') as output_file:
   output_file.write("algorithm,m,k,n,interleaving,max,avg,median,min,stddev,numtrials\n")
