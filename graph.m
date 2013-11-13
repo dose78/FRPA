@@ -13,6 +13,7 @@ tick_label_size = 15;
 axis_label_size = 21;
 my_axis = [0 4700 0 4700];
 my_tick = [0:1000:4000];
+line_width = 1;
 
 %% ---------------------------- %%
 
@@ -91,19 +92,30 @@ for infile = infiles
         end
     end
 
+    set(0,'DefaultAxesLineStyleOrder', '-|--|:');
+    % set(0,'DefaultAxesColorOrder', [blue; green; red]);
     for numBs = xaxes_matrix.keys
         numBs = numBs{1};
         fig = figure;
-        plot(xaxes_matrix(numBs), yaxes_matrix(numBs));
-        lh = legend(seriesnames(numBs));
-        % set(lh,'location','northeastoutside');
-        % pos = get(lh,'position');
-        % set(lh, 'position',[0.8 0.5 pos(3:4)])
-        xlabel({'','Matrix Size'},'fontsize',axis_label_size);
+        plot(xaxes_matrix(numBs)/1000, yaxes_matrix(numBs), 'LineWidth', line_width);
+
+        num_lines = length(seriesnames(numBs));
+        if num_lines < 8
+            lh = legend(seriesnames(numBs), 'Location', 'southeast');
+        else
+            lh = legend(seriesnames(numBs), 'Location', 'northeastoutside');
+            % pos = get(lh,'position');
+            % set(lh, 'position',[1 0.25 pos(3:4)])
+        end
+        legend('boxoff')
+
+        xlabel({'','Matrix Size (thousands)'},'fontsize',axis_label_size);
         ylabel('GFlops','fontsize',axis_label_size);
-        % axis([0 1000 0 100]);
-        % pbaspect([1 0.97 1]);
-        % set(gca,'fontsize',tick_label_size,'xtick',[0:100:1000],'ytick',[0:10:100]);
+        max_x = max(max(xaxes_matrix(numBs)/1000));
+        max_y = max(max(yaxes_matrix(numBs)));
+        max_y = 50*(ceil(max_y/50.)); % round up to nearest 50
+        axis([0 max_x 0 max_y]);
+        % set(gca,'fontsize',tick_label_size,'xtick',[0:2000:max_x]);
         set(gca,'fontsize',tick_label_size);
         filename = [infilename, '-', num2str(numBs), 'Bs', '.eps'];
         print(fig,'-depsc',filename);
