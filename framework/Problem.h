@@ -22,5 +22,6 @@ public:
     virtual void mergeSequential(std::vector<Problem*> subproblems);
     virtual bool mustRunBaseCase();
     virtual bool canRunBaseCase();
+    int depth;
 };
 #endif

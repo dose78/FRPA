@@ -35,6 +35,7 @@ std::vector<Problem*> Framework::getSubproblemsFromTasks(std::vector<Task*> task
 }
 
 void Framework::solve(Problem* problem, int depth) {
+    problem->depth = depth;
     if (problem->canRunBaseCase() && (problem->mustRunBaseCase() || shouldRunBaseCase(depth))) {
         problem->runBaseCase();
         return;
