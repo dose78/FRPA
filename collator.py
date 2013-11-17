@@ -5,27 +5,52 @@ import numpy
 import os
 
 input_filename = sys.argv[1]
-output_filename = input_filename.split(".")[0] + "-out." + input_filename.split(".")[1]
-temp_filename = input_filename + ".temp_file"
-os.system("rm -f " + output_filename)
+base = input_filename.split(".")[0]
+ext = "." + input_filename.split(".")[1]
+
+with open(input_filename, 'r') as input_file:
+  first_line = input_file.readline()
+
+if first_line.startswith("algorithm"):
+  print("ERROR: Already collated")
+  sys.exit(0)
+
+os.system("mkdir -p original/")
+os.system("mkdir -p memory/")
+original_filename = "original/" + base + "-original" + ext
+mem_filename = "memory/" + base + "-mem" + ext
+temp_filename = base + ".temp"
+output_filename = input_filename
+
+os.system("rm -f " + original_filename)
+os.system("rm -f " + mem_filename)
 os.system("rm -f " + temp_filename)
 
+os.system("mv " + input_filename + " " + original_filename)
+del(input_filename)
+
 results = {}
-with open(input_filename,'rb') as input_file:
-  reader = csv.reader(input_file)
-  for row in reader:
-    key = ",".join(row[0:-1])
-    val = row[-1]
-    if results.has_key(key):
-      results[key].append(val)
-    else:
-      results[key] = [val]
+with open(mem_filename,'wb') as mem_file:
+  mem_writer = csv.writer(mem_file)
+  with open(original_filename,'rb') as orig_file:
+    reader = csv.reader(orig_file)
+    for row in reader:
+      if len(row) > 6: # memory info included
+        mem_writer.writerow(row)
+      else:
+        key = ",".join(row[0:-1])
+        val = row[-1]
+        if results.has_key(key):
+          results[key].append(val)
+        else:
+          results[key] = [val]
 
 with open(temp_filename,'wb') as temp_file:
   for result in results.items():
     temp_file.write(result[0] + "," + ",".join(result[1])+"\n")
 
 os.system("sort -t, -k 1,1 -k 5,5 -k 2,2n -k 3,3n -k 4,4n " + temp_filename + " -o " + temp_filename)
+os.system("sort -t, -k 1,1 -k 5,5 -k 2,2n -k 3,3n -k 4,4n " + mem_filename + " -o " + mem_filename)
 
 with open(output_filename,'wb') as output_file:
   output_file.write("algorithm,m,k,n,interleaving,max,avg,median,min,stddev,numtrials\n")
