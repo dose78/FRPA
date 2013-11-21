@@ -2,9 +2,9 @@
 clear;
 
 infiles = {'strassen-double-emerald.csv'};
-infiles{end+1} = 'strassen-double-boxboro.csv';
-infiles{end+1} = 'strassen-single-emerald.csv';
-infiles{end+1} = 'strassen-single-boxboro.csv';
+% infiles{end+1} = 'strassen-double-boxboro.csv';
+% infiles{end+1} = 'strassen-single-emerald.csv';
+% infiles{end+1} = 'strassen-single-boxboro.csv';
 xaxis = 'k'; % m, k, or n
 yaxis = 'max'; % max, avg, median, or min
 % show_graph_info = false; % must be true or false (no quotes).
@@ -79,16 +79,16 @@ for infile = infiles
         end
 
         % all lines on same plot
-        if (xaxes_matrix.isKey(0))
-            xaxes_matrix(0) = [xaxes_matrix(0), transpose(xaxes(interleaving))];
-            yaxes_matrix(0) = [yaxes_matrix(0), transpose(yaxes(interleaving))];
-            tempseriesnames = seriesnames(0);
+        if (xaxes_matrix.isKey(-1))
+            xaxes_matrix(-1) = [xaxes_matrix(-1), transpose(xaxes(interleaving))];
+            yaxes_matrix(-1) = [yaxes_matrix(-1), transpose(yaxes(interleaving))];
+            tempseriesnames = seriesnames(-1);
             tempseriesnames{end+1} = interleaving;
-            seriesnames(0) = tempseriesnames;
+            seriesnames(-1) = tempseriesnames;
         else
-            xaxes_matrix(0) = [transpose(xaxes(interleaving))];
-            yaxes_matrix(0) = [transpose(yaxes(interleaving))];
-            seriesnames(0) = {interleaving};
+            xaxes_matrix(-1) = [transpose(xaxes(interleaving))];
+            yaxes_matrix(-1) = [transpose(yaxes(interleaving))];
+            seriesnames(-1) = {interleaving};
         end
     end
 
@@ -100,7 +100,7 @@ for infile = infiles
         plot(xaxes_matrix(numBs)/1000, yaxes_matrix(numBs), 'LineWidth', line_width);
 
         num_lines = length(seriesnames(numBs));
-        if num_lines < 8
+        if num_lines < 14
             lh = legend(seriesnames(numBs), 'Location', 'southeast');
         else
             lh = legend(seriesnames(numBs), 'Location', 'northeastoutside');
@@ -117,7 +117,12 @@ for infile = infiles
         axis([0 max_x 0 max_y]);
         % set(gca,'fontsize',tick_label_size,'xtick',[0:2000:max_x]);
         set(gca,'fontsize',tick_label_size);
-        filename = [infilename, '-', num2str(numBs), 'Bs', '.eps'];
+        if numBs == -1
+            plotext = 'all';
+        else
+            plotext = [num2str(numBs), 'Bs'];
+        end
+        filename = [infilename, '-', plotext, '.eps'];
         print(fig,'-depsc',filename);
     end
 end
