@@ -7,6 +7,7 @@ infiles = {'strassen-double-emerald.csv'};
 % infiles{end+1} = 'strassen-single-boxboro.csv';
 xaxis = 'k'; % m, k, or n
 yaxis = 'max'; % max, avg, median, or min
+show_peak = true;
 % show_graph_info = false; % must be true or false (no quotes).
 
 tick_label_size = 15;
@@ -40,6 +41,8 @@ for infile = infiles
     numtrials_i = find(strcmp(header, 'numtrials'));
 
     interleavings = data{interleaving_i};
+    algorithm = data{algorithm_i}(1);
+    algorithm = algorithm{1};
     numlines = length(data{1});
     xaxisvals = data{find(strcmp(header, xaxis))};
     yaxisvals = data{find(strcmp(header, yaxis))};
@@ -96,6 +99,29 @@ for infile = infiles
     % set(0,'DefaultAxesColorOrder', [blue; green; red]);
     for numBs = xaxes_matrix.keys
         numBs = numBs{1};
+
+        if show_peak
+            if not(isempty(strfind(infile,'single-emerald')))
+                peak = 578.8;
+            elseif not(isempty(strfind(infile,'double-emerald')))
+                peak = 289.4;
+            elseif not(isempty(strfind(infile,'single-boxboro')))
+                peak = 723.2;
+            elseif not(isempty(strfind(infile,'double-boxboro')))
+                peak = 361.6;
+            else
+                peak = 100;
+                display('peak unknown, arbitrarily set to 100');
+            end
+            num_xs = size(yaxes_matrix(numBs),1);
+            m = xaxes_matrix(numBs);
+            xaxes_matrix(numBs) = [m(:,1), xaxes_matrix(numBs)];
+            yaxes_matrix(numBs) = [ones(num_xs,1) * peak, yaxes_matrix(numBs)];
+            tempseriesnames = fliplr(seriesnames(numBs));
+            tempseriesnames{end+1} = 'Classical Peak';
+            seriesnames(numBs) = fliplr(tempseriesnames);
+        end
+
         fig = figure;
         plot(xaxes_matrix(numBs)/1000, yaxes_matrix(numBs), 'LineWidth', line_width);
 
