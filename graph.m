@@ -7,8 +7,8 @@ infiles = {'strassen-double-emerald.csv'};
 % infiles{end+1} = 'strassen-single-boxboro.csv';
 xaxis = 'k'; % m, k, or n
 yaxis = 'max'; % max, avg, median, or min
-show_peak = true;
-% show_graph_info = false; % must be true or false (no quotes).
+
+interleavings_to_kill = {'BBDBDB'};
 
 tick_label_size = 15;
 axis_label_size = 21;
@@ -21,51 +21,29 @@ line_width = 1;
 for infile = infiles
     infile = infile{1};
     display(['running ', infile]);
-    [pathstr,infilename,ext] = fileparts(infile);
-    fileID = fopen(infile,'r');
-    header = textscan(fileID, '%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,\n]', 1);
-    header = [header{:}];
-    data = textscan(fileID, '%s%f%f%f%s%f%f%f%f%f%f%*[^\n]', 'Delimiter', ',', 'headerLines', 1);
-    fclose(fileID);
-
-    algorithm_i = find(strcmp(header, 'algorithm'));
-    m_i = find(strcmp(header, 'm'));
-    k_i = find(strcmp(header, 'k'));
-    n_i = find(strcmp(header, 'n'));
-    interleaving_i =  find(strcmp(header, 'interleaving'));
-    max_i = find(strcmp(header, 'max'));
-    avg_i = find(strcmp(header, 'avg'));
-    median_i = find(strcmp(header, 'median'));
-    min_i = find(strcmp(header, 'min'));
-    stddev_i = find(strcmp(header, 'stddev'));
-    numtrials_i = find(strcmp(header, 'numtrials'));
-
-    interleavings = data{interleaving_i};
-    algorithm = data{algorithm_i}(1);
-    algorithm = algorithm{1};
-    numlines = length(data{1});
-    xaxisvals = data{find(strcmp(header, xaxis))};
-    yaxisvals = data{find(strcmp(header, yaxis))};
+    readfile;
 
     % key is interleaving
     xaxes = containers.Map;
     yaxes = containers.Map;
-
     for i = 1:numlines
         interleaving = interleavings(i);
         interleaving = interleaving{1};
-        if not (xaxes.isKey(interleaving))
-            xaxes(interleaving) = [];
-            yaxes(interleaving) = [];
+        if (max(ismember(interleavings_to_kill, interleaving)) == 0)
+            if not (xaxes.isKey(interleaving))
+                xaxes(interleaving) = [];
+                yaxes(interleaving) = [];
+            end
+            xaxes(interleaving) = [xaxes(interleaving), xaxisvals(i)];
+            yaxes(interleaving) = [yaxes(interleaving), yaxisvals(i)];
         end
-        xaxes(interleaving) = [xaxes(interleaving), xaxisvals(i)];
-        yaxes(interleaving) = [yaxes(interleaving), yaxisvals(i)];
     end
 
     % key is number of Bs
     xaxes_matrix = containers.Map(1, [1,1; 1,1]); xaxes_matrix.remove(1);
     yaxes_matrix = containers.Map(1, [1,1; 1,1]); yaxes_matrix.remove(1);
     seriesnames = containers.Map(1, [1,1]); seriesnames.remove(1);
+    allYs = [];
     for interleaving = xaxes.keys
         interleaving= interleaving{1};
         numBs = length(find(interleaving=='B'));
@@ -93,34 +71,41 @@ for infile = infiles
             yaxes_matrix(-1) = [transpose(yaxes(interleaving))];
             seriesnames(-1) = {interleaving};
         end
+
+        % for optimal
+        allYs = [allYs, transpose(yaxes(interleaving))];
     end
+    maxYs = max(allYs')';
 
     set(0,'DefaultAxesLineStyleOrder', '-|--|:');
+    colororder = [0,0,1; 1,0,0; 0,.5,0; 0,.75,.75; .75,0,.75; .75,.75,0; .25,.25,.25];
+    set(0,'DefaultAxesColorOrder', colororder);
+    % colororder = get(gca,'ColorOrder');
     % set(0,'DefaultAxesColorOrder', [blue; green; red]);
+
+    if not(isempty(strfind(algorithm,'STRASSEN')))
+        comp = 'BBB';
+        xaxislabel = 'Matrix Size (m = k = n, thousands)';
+    else
+        comp = 'BBBBBB';
+        xaxislabel = 'Matrix Size (k, thousands)';
+    end
+    if not(isempty(strfind(infile,'single-emerald')))
+        peak = 578.8;
+    elseif not(isempty(strfind(infile,'double-emerald')))
+        peak = 289.4;
+    elseif not(isempty(strfind(infile,'single-boxboro')))
+        peak = 723.2;
+    elseif not(isempty(strfind(infile,'double-boxboro')))
+        peak = 361.6;
+    else
+        peak = 100;
+        display('peak unknown, arbitrarily set to 100');
+    end
+
+    % ALL INTERLEAVINGS
     for numBs = xaxes_matrix.keys
         numBs = numBs{1};
-
-        if show_peak
-            if not(isempty(strfind(infile,'single-emerald')))
-                peak = 578.8;
-            elseif not(isempty(strfind(infile,'double-emerald')))
-                peak = 289.4;
-            elseif not(isempty(strfind(infile,'single-boxboro')))
-                peak = 723.2;
-            elseif not(isempty(strfind(infile,'double-boxboro')))
-                peak = 361.6;
-            else
-                peak = 100;
-                display('peak unknown, arbitrarily set to 100');
-            end
-            num_xs = size(yaxes_matrix(numBs),1);
-            m = xaxes_matrix(numBs);
-            xaxes_matrix(numBs) = [m(:,1), xaxes_matrix(numBs)];
-            yaxes_matrix(numBs) = [ones(num_xs,1) * peak, yaxes_matrix(numBs)];
-            tempseriesnames = fliplr(seriesnames(numBs));
-            tempseriesnames{end+1} = 'Classical Peak';
-            seriesnames(numBs) = fliplr(tempseriesnames);
-        end
 
         fig = figure;
         plot(xaxes_matrix(numBs)/1000, yaxes_matrix(numBs), 'LineWidth', line_width);
@@ -135,7 +120,7 @@ for infile = infiles
         end
         legend('boxoff')
 
-        xlabel({'','Matrix Size (thousands)'},'fontsize',axis_label_size);
+        xlabel({'',xaxislabel},'fontsize',axis_label_size);
         ylabel('GFlops','fontsize',axis_label_size);
         max_x = max(max(xaxes_matrix(numBs)/1000));
         max_y = max(max(yaxes_matrix(numBs)));
@@ -151,4 +136,42 @@ for infile = infiles
         filename = [infilename, '-', plotext, '.eps'];
         print(fig,'-depsc',filename);
     end
+
+    % OPENTUNER
+    fig = figure;
+    xaxisot = xaxes(comp)'/1000;
+    plot([xaxisot, xaxisot], [yaxes(comp)', maxYs], 'LineWidth', line_width);
+    lh = legend({comp, 'OpenTuner'}, 'Location', 'southeast');
+    legend('boxoff')
+    xlabel({'',xaxislabel},'fontsize',axis_label_size);
+    ylabel('GFlops','fontsize',axis_label_size);
+    max_x = max(xaxisot);
+    max_y = max(maxYs);
+    max_y = 50*(ceil(max_y/50.)); % round up to nearest 50
+    axis([0 max_x 0 max_y]);
+    % set(gca,'fontsize',tick_label_size,'xtick',[0:2000:max_x]);
+    set(gca,'fontsize',tick_label_size);
+    filename = [infilename, '-', 'opentuner', '.eps'];
+    print(fig,'-depsc',filename);
+
+    % COMPARISON
+    fig = figure;
+    infile = strrep(infile, 'strassen', 'mkl');
+    infile = strrep(infile, 'carma', 'mkl');
+    readfile;
+
+    xaxisot(30) = 0; maxYs(30) = 0; % TODO DELETE
+    plot([xaxisvals/1000, xaxisot, xaxisot], [yaxisvals, maxYs, ones(size(xaxisot,1),1) * peak], 'LineWidth', line_width);
+    lh = legend({'MKL', 'Optimal (OpenTuner)', 'Classical Peak'}, 'Location', 'southeast');
+    legend('boxoff')
+    xlabel({'',xaxislabel},'fontsize',axis_label_size);
+    ylabel('GFlops','fontsize',axis_label_size);
+    max_x = max([xaxisvals/1000; xaxisot]);
+    max_y = max([yaxisvals; maxYs]);
+    max_y = 50*(ceil(max_y/50.)); % round up to nearest 50
+    axis([0 max_x 0 max_y]);
+    % set(gca,'fontsize',tick_label_size,'xtick',[0:2000:max_x]);
+    set(gca,'fontsize',tick_label_size);
+    filename = [infilename, '-', 'comparison', '.eps'];
+    print(fig,'-depsc',filename);
 end
