@@ -22,6 +22,7 @@ for infile = infiles
     infile = infile{1};
     display(['running ', infile]);
     readfile;
+    infilename_orig = infilename;
 
     % key is interleaving
     xaxes = containers.Map;
@@ -133,7 +134,7 @@ for infile = infiles
         else
             plotext = [num2str(numBs), 'Bs'];
         end
-        filename = [infilename, '-', plotext, '.eps'];
+        filename = [infilename_orig, '-', plotext, '.eps'];
         print(fig,'-depsc',filename);
     end
 
@@ -151,7 +152,7 @@ for infile = infiles
     axis([0 max_x 0 max_y]);
     % set(gca,'fontsize',tick_label_size,'xtick',[0:2000:max_x]);
     set(gca,'fontsize',tick_label_size);
-    filename = [infilename, '-', 'opentuner', '.eps'];
+    filename = [infilename_orig, '-', 'opentuner', '.eps'];
     print(fig,'-depsc',filename);
 
     % COMPARISON
@@ -160,7 +161,6 @@ for infile = infiles
     infile = strrep(infile, 'carma', 'mkl');
     readfile;
 
-    xaxisot(30) = 0; maxYs(30) = 0; % TODO DELETE
     plot([xaxisvals/1000, xaxisot, xaxisot], [yaxisvals, maxYs, ones(size(xaxisot,1),1) * peak], 'LineWidth', line_width);
     lh = legend({'MKL', 'Optimal (OpenTuner)', 'Classical Peak'}, 'Location', 'southeast');
     legend('boxoff')
@@ -172,6 +172,6 @@ for infile = infiles
     axis([0 max_x 0 max_y]);
     % set(gca,'fontsize',tick_label_size,'xtick',[0:2000:max_x]);
     set(gca,'fontsize',tick_label_size);
-    filename = [infilename, '-', 'comparison', '.eps'];
+    filename = [infilename_orig, '-', 'comparison', '.eps'];
     print(fig,'-depsc',filename);
 end
