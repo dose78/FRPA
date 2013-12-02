@@ -3,9 +3,11 @@
 #define MAX_SIZE 100
 
 class MergesortProblem: public Problem {
-public:
+private:
     double *A;
     int length;
+
+public:
     MergesortProblem(double *A, int length);
     bool mustRunBaseCase();
     void runBaseCase();
