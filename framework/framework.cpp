@@ -34,8 +34,21 @@ std::vector<Problem*> Framework::getSubproblemsFromTasks(std::vector<Task*> task
     return subproblems;
 }
 
+void Framework::setNumBs(std::vector<Problem*> problems, int numBs) {
+    for(std::vector<Problem*>::iterator problemIter = problems.begin(); problemIter != problems.end(); problemIter++) {
+        Problem *problem = *problemIter;
+        problem->numBs = numBs;
+    }
+}
+
+void Framework::setNumBs(std::vector<Task*> tasks, int numBs) {
+    for(std::vector<Task*>::iterator taskIterator = tasks.begin(); taskIterator != tasks.end(); taskIterator++) {
+        Task *task = *taskIterator;
+        setNumBs(task->getProblems(), numBs);
+    }
+}
+
 void Framework::solve(Problem* problem, int depth) {
-    problem->depth = depth;
     if (problem->canRunBaseCase() && (problem->mustRunBaseCase() || shouldRunBaseCase(depth))) {
         problem->runBaseCase();
         return;
@@ -44,6 +57,7 @@ void Framework::solve(Problem* problem, int depth) {
     std::vector<Problem*> subproblems;
     if (interleaving[depth] == 'B') {
         std::vector<Task*> tasks = problem->split();
+        setNumBs(tasks, problem->numBs+1);
         for(std::vector<Task*>::iterator taskIterator = tasks.begin(); taskIterator != tasks.end(); taskIterator++) {
             Task *task = *taskIterator;
             cilk_spawn solveTask(task, depth+1);
@@ -53,6 +67,7 @@ void Framework::solve(Problem* problem, int depth) {
         problem->merge(subproblems);
     } else {
         subproblems = problem->splitSequential();
+        setNumBs(subproblems, problem->numBs);
         for(std::vector<Problem*>::iterator problemIter = subproblems.begin(); problemIter != subproblems.end(); problemIter++) {
             Problem *subproblem = *problemIter;
             solve(subproblem, depth + 1);
@@ -70,6 +85,7 @@ void Framework::solve(Problem* problem, int depth) {
 }
 
 void Framework::solve(Problem* problem, std::string interleaving) {
+    problem->numBs = 0;
     Framework::interleaving = interleaving;
     Memory::reset();
     solve(problem, 0);

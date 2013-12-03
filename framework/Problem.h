@@ -22,6 +22,6 @@ public:
     virtual void mergeSequential(std::vector<Problem*> subproblems);
     virtual bool mustRunBaseCase();
     virtual bool canRunBaseCase();
-    int depth;
+    int numBs; // Number of breadth-first steps that have been run, not including current depth
 };
 #endif

@@ -12,7 +12,7 @@
 
 class Framework {
 public:
-    static void solve(Problem* problem, std::string customInterleaving);
+    static void solve(Problem* problem, std::string interleaving);
 
 private:
     static std::string interleaving;
@@ -21,6 +21,8 @@ private:
     static void solveTask(Task* task, int depth);
     static void deleteSubproblems(std::vector<Problem*> subproblems);
     static std::vector<Problem*> getSubproblemsFromTasks(std::vector<Task*> tasks);
+    static void setNumBs(std::vector<Task*> tasks, int numBs);
+    static void setNumBs(std::vector<Problem*> problems, int numBs);
 };
 
 #endif
