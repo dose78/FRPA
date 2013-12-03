@@ -1,6 +1,5 @@
 #include "Task.h"
 #include "Problem.h"
-#define MAX_SIZE 100
 
 class MergesortProblem: public Problem {
 private:

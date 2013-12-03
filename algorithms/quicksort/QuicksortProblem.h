@@ -1,11 +1,12 @@
 #include "Task.h"
 #include "Problem.h"
-#define MAX_SIZE 100
 
 class QuicksortProblem: public Problem {
-public:
+private:
     double *A;
     int length;
+
+public:
     QuicksortProblem(double *A, int length);
     bool mustRunBaseCase();
     void runBaseCase();

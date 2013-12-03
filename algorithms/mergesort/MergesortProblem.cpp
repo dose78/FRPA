@@ -14,7 +14,7 @@ MergesortProblem::MergesortProblem(double *A, int length) {
 }
 
 bool MergesortProblem::mustRunBaseCase() {
-    return (length < MAX_SIZE);
+    return (length <= 1);
 }
 
 void MergesortProblem::runBaseCase() {

@@ -14,7 +14,7 @@ QuicksortProblem::QuicksortProblem(double *A, int length) {
 }
 
 bool QuicksortProblem::mustRunBaseCase() {
-    return (length < MAX_SIZE);
+    return (length <= 1);
 }
 
 void QuicksortProblem::runBaseCase() {
@@ -36,12 +36,9 @@ std::vector<Task*> QuicksortProblem::split() {
     A[length - 1] = A[i];
     A[i] = pivot;
 
-    Task* task1 = new Task(new QuicksortProblem(A, i));
-    Task* task2 = new Task(new QuicksortProblem(A + i + 1, length - i - 1));
-
     std::vector<Task*> tasks (2);
-    tasks[0] = task1;
-    tasks[1] = task2;
+    tasks[0] = new Task(new QuicksortProblem(A, i));
+    tasks[1] = new Task(new QuicksortProblem(A + i + 1, length - i - 1));
     return tasks;
 }
 
