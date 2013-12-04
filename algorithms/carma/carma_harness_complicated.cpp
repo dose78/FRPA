@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
     int n = atoi(argv[3]);
     std::string interleaving = argv[4];
 
-    FILE *f = fopen("carma.csv","a");
+    FILE *f = fopen("carma-double.csv","a");
 
     // discover how many multiplies are needed
     int num_matrices = guess_num_matrices(m, k, n, interleaving);

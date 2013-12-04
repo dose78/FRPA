@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
     int n = atoi(argv[3]);
     std::string interleaving = argv[4];
 
-    FILE *f = fopen("carma.csv","a");
+    FILE *f = fopen("carma-double.csv","a");
 
     double *A, *B, *C;
     A = (double*) malloc(m * k * sizeof(double));
