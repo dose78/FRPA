@@ -26,6 +26,13 @@ for infile = infiles
     infile = infile{1};
     [pathstr,infilename,ext] = fileparts(infile);
     display(['running ', infilename]);
+
+    if not(isempty(strfind(infilename,'carma')))
+        yaxis_label = 'GFlops';
+    else
+        yaxis_label = 'Effective GFlops';
+    end
+
     data = csvread(infile);
     num_cols_to_add = 100 - size(data,2);
     data = [data, zeros(size(data,1), num_cols_to_add)];
@@ -54,7 +61,7 @@ for infile = infiles
     errorbar(Xs, Ys, Ys - first_quart, third_quart - Ys);
 
     xlabel({'','Iteration'},'fontsize',axis_label_size);
-    ylabel('Effective GFlops','fontsize',axis_label_size);
+    ylabel(yaxis_label,'fontsize',axis_label_size);
 
     lh = legend({'Maximum Achievable Performance', 'Average Cumulative Performance'}, 'Location', 'southeast');
     set(lh,'FontSize',legend_font_size);
