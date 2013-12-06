@@ -3,24 +3,38 @@ clear;
 
 infiles = {};
 
-folder = 'data/carma';
-% infiles{end+1} = 'carma-double-emerald.csv';
-% infiles{end+1} = 'carma-double-boxboro.csv';
-% infiles{end+1} = 'carma-single-emerald.csv';
-% infiles{end+1} = 'carma-single-boxboro.csv';
+folder = 'data/strassen';
+infiles{end+1} = 'strassen-double-emerald.csv';
+infiles{end+1} = 'strassen-double-boxboro.csv';
+infiles{end+1} = 'strassen-single-emerald.csv';
+infiles{end+1} = 'strassen-single-boxboro.csv';
+
+show_legends = false;
+
 xaxis = 'k'; % m, k, or n
 yaxis = 'max'; % max, avg, median, or min
 
-carma_interleavings = {'BBBBBB', 'BBBBBBD', 'BBBBBDB', 'BBBBBDDB', 'BBBBDBB', 'BBBDBBB', 'BBBDDBBB', 'BBDBBDBB', 'BBDBDBDBB', 'BDBBBBB', 'BDBDBDBDBDB', 'DBBBBBB', 'BBBBBBB', 'BBBDBBBB', 'BBBBDBBB', 'BDBBBBBB', 'BBBBBBDB', 'BBBBBBBD', 'DBBBBBBB', 'BBBDBDBBB', 'BBDBBBDBB', 'BDBBBBBDB', 'BBBBBBDDB', 'BBBDBDBDBB', 'BDBDBDBDBDBDB'};
-strassen_interleavings = {'BBBBBB', 'BBBBBBB'};
+% carma_interleavings_all = {'BBBBBB', 'BBBDBBB', 'BDBBBBB', 'BBBBBDB', 'BBBBDBB', 'BBBBBBD', 'DBBBBBB', 'BBBDDBBB', 'BBDBBDBB', 'BBBBBDDB', 'BBDBDBDBB', 'BDBDBDBDBDB', 'BBBBBBB', 'BBBDBBBB', 'BBBBDBBB', 'BDBBBBBB', 'BBBBBBDB', 'BBBBBBBD', 'DBBBBBBB', 'BBBDBDBBB', 'BBDBBBDBB', 'BDBBBBBDB', 'BBBBBBDDB', 'BBBDBDBDBB', 'BDBDBDBDBDBDB'};
+% strassen_interleavings_all = {'BB', 'DBB', 'BDB', 'BBD', 'DBDB', 'BDDB', 'BDBD', 'BBB', 'DBBB', 'BDBB', 'BBDB', 'BBBD', 'BDBDB', 'BBDBD', 'BBBB', 'BDBBB', 'BBDBB', 'BBBDB', 'BDBDBB', 'BBDBDB'};
 
-y_plot_round = 50.0;
+carma_interleavings = {'BBBBBB', 'BBBBBDB', 'BBBDBBB', 'BBBDDBBB', 'BBDBDBDBB', 'BDBDBDBDBDB', 'BBBBBBB', 'BBBDBBBB', 'BBBBDBBB', 'BBBDBDBBB', 'BBDBBBDBB', 'BBBBBBDDB'};
+
+% GOOD:
+% strassen_interleavings = {};
+strassen_interleavings = {'BB', 'DBB', 'BDB', 'BDBD', 'BBB', 'DBBB', 'BDBB', 'BDBDB'};
+
 
 tick_label_size = 15;
 axis_label_size = 21;
 % my_axis = [0 4700 0 4700];
 % my_tick = [0:1000:4000];
 line_width = 1;
+
+set(0,'DefaultAxesLineStyleOrder', '--|-|:');
+% colororder = [0,.5,0; 0,0,1; 1,0,0; 0,.75,.75; .75,0,.75; .75,.75,0; .25,.25,.25];
+% colororder = get(gca,'ColorOrder');
+% set(0,'DefaultAxesColorOrder', [blue; green; red]);
+peak_color = [0,.5,0];
 
 %% ---------------------------- %%
 
@@ -29,6 +43,63 @@ for infile = infiles
     display(['running ', infile]);
     readfile;
     infilename_orig = infilename;
+
+    y_plot_round = 50.0;
+
+    if not(isempty(strfind(infile,'single-emerald')))
+        if not(isempty(strfind(folder,'carma')))
+            peak = 213.5;
+        else
+            y_plot_round = 100.0;
+            peak = 578.8;
+        end
+    elseif not(isempty(strfind(infile,'double-emerald')))
+        if not(isempty(strfind(folder,'carma')))
+            y_plot_round = 25.0;
+            peak = 111.1;
+        else
+            peak = 289.4;
+        end
+    elseif not(isempty(strfind(infile,'single-boxboro')))
+        if not(isempty(strfind(folder,'carma')))
+            peak = 260.86;
+        else
+            y_plot_round = 100.0;
+            peak = 723.2;
+        end
+    elseif not(isempty(strfind(infile,'double-boxboro')))
+        if not(isempty(strfind(folder,'carma')))
+            y_plot_round = 25.0;
+            peak = 141.68;
+        else
+            peak = 361.6;
+        end
+    else
+        peak = -1;
+        display('peak unknown, set to -1');
+    end
+
+    if not(isempty(strfind(algorithm,'STRASSEN')))
+        comp = 'BBB';
+        xaxislabel = 'Matrix Size (m = k = n, thousands)';
+        yaxislabel = 'Effective GFlops';
+        peak_label = 'Classical Peak';
+        interleavings_plot = strassen_interleavings;
+        comp_label = [comp, ' Strassen'];
+        frpa_alg_name = 'FRPA Strassen';
+        colororder = [0,0,1; 1,0,0; 0,.75,.75; .75,0,.75];
+    else
+        comp = 'BBBBB';
+        xaxislabel = 'Middle Dimension (k, thousands)';
+        yaxislabel = 'GFlops';
+        peak_label = 'Effective Peak';
+        interleavings_plot = carma_interleavings;
+        comp_label = 'Original CARMA';
+        frpa_alg_name = 'FRPA CARMA';
+        colororder = [0,0,1; 1,0,0; 0,.75,.75; .75,0,.75; .75,.75,0; .25,.25,.25];
+    end
+
+    set(0,'DefaultAxesColorOrder', colororder);
 
     % key is interleaving
     xaxes = containers.Map;
@@ -44,17 +115,16 @@ for infile = infiles
         yaxes(interleaving) = [yaxes(interleaving), yaxisvals(i)];
     end
 
-    set(0,'DefaultAxesLineStyleOrder', '-|--|:');
-    % colororder = [0,.5,0; 0,0,1; 1,0,0; 0,.75,.75; .75,0,.75; .75,.75,0; .25,.25,.25];
-    peak_color = [0,.5,0];
-    colororder = [0,0,1; 1,0,0; 0,.75,.75; .75,0,.75; .75,.75,0; .25,.25,.25];
-    set(0,'DefaultAxesColorOrder', colororder);
-    % colororder = get(gca,'ColorOrder');
-    % set(0,'DefaultAxesColorOrder', [blue; green; red]);
+    xmatrix_all = [];
+    ymatrix_all = [];
+    for interleaving = xaxes.keys
+        interleaving = interleaving{1};
+        xmatrix_all = [xmatrix_all, xaxes(interleaving)'/1000];
+        ymatrix_all = [ymatrix_all, yaxes(interleaving)'];
+    end
 
 
-    % ALL INTERLEAVINGS
-    fig = figure;
+    % SELECTED INTERLEAVINGS
     xmatrix = [];
     ymatrix = [];
     for interleaving = interleavings_plot
@@ -65,75 +135,77 @@ for infile = infiles
     max_x = max(max(xmatrix));
     max_y = max([peak, max(max(ymatrix))]);
 
+    fig = figure;
     plot(xmatrix, ymatrix, 'LineWidth', line_width);
     hold on;
-    plot([0, max_x], [peak, peak], 'Color', peak_color, 'LineWidth', line_width);
+    plot([0, max_x], [peak, peak], ':', 'Color', peak_color, 'LineWidth', line_width*1.5);
     hold off;
-
     interleavings_legend = interleavings_plot;
     interleavings_legend{end+1} = peak_label;
-    lh = legend(interleavings_legend, 'Location', 'southeast');
-    % lh = legend(tempseriesnames, 'Location', 'northeastoutside');
-    % pos = get(lh,'position');
-    % set(lh, 'position',[1 0.25 pos(3:4)])
-    legend('boxoff')
-
+    if show_legends
+        lh = legend(interleavings_legend, 'Location', 'southeast');
+        legend('boxoff');
+    end
     xlabel({'',xaxislabel},'fontsize',axis_label_size);
     ylabel(yaxislabel,'fontsize',axis_label_size);
     max_y_plot = y_plot_round*(ceil(max_y/y_plot_round)); % round up to nearest y_plot_round
     axis([0 max_x 0 max_y_plot]);
-    set(gca,'fontsize',tick_label_size);
-    % set(gca,'fontsize',tick_label_size,'xtick',[0:2000:max_x]);
+    set(gca,'fontsize',tick_label_size,'ytick',[0:y_plot_round:max_y_plot]);
     filename = [infilename_orig, '.eps'];
     print(fig,'-depsc',filename);
 
+    % READ MKL
+    infile = strrep(infile, 'strassen', 'mkl');
+    infile = strrep(infile, 'carma', 'mkl');
+    readfile;
 
     % OPENTUNER
-    fig = figure;
-    xmatrix_ot = [xmatrix(:,1), xmatrix(:,1)];
-    ymatrix_ot = [yaxes(comp)', max(ymatrix')'];
+    xmatrix_ot = [xmatrix_all(:,1), xmatrix_all(:,1)];
+    ymatrix_ot = [yaxes(comp)', max([ymatrix_all, yaxisvals]')'];
     max_x = max(max(xmatrix_ot));
     max_y = max([peak, max(max(ymatrix_ot))]);
 
-    plot(xmatrix_ot, ymatrix_ot, 'LineWidth', line_width);
+    fig = figure;
+    plot([0, max(max(xmatrix_ot))], [peak, peak], '--', 'Color', peak_color, 'LineWidth', line_width*1.5);
     hold on;
-    plot([0, max(max(xmatrix_ot))], [peak, peak], 'Color', peak_color, 'LineWidth', line_width);
+    plot(xmatrix_ot(:,2), ymatrix_ot(:,2), 'r-', 'LineWidth', line_width*1.5);
+    plot(xmatrix_ot(:,1), ymatrix_ot(:,1), 'b-', 'LineWidth', line_width*1.5);
     hold off;
-    lh = legend({comp_label, 'OpenTuner', peak_label}, 'Location', 'southeast');
-    legend('boxoff')
+    if show_legends
+        lh = legend({peak_label, frpa_alg_name, comp_label}, 'Orientation', 'Horizontal', 'Location', 'NorthOutside');
+        legend('boxoff')
+    end
     xlabel({'',xaxislabel},'fontsize',axis_label_size);
     ylabel(yaxislabel,'fontsize',axis_label_size);
     max_y_plot = y_plot_round*(ceil(max_y/y_plot_round)); % round up to nearest y_plot_round
     axis([0 max_x 0 max_y_plot]);
-    % set(gca,'fontsize',tick_label_size,'xtick',[0:2000:max_x]);
-    set(gca,'fontsize',tick_label_size);
+    set(gca,'fontsize',tick_label_size,'ytick',[0:y_plot_round:max_y_plot]);
     filename = [infilename_orig, '-', 'opentuner', '.eps'];
     print(fig,'-depsc',filename);
 
 
     % MKL COMPARISON
-    fig = figure;
-    infile = strrep(infile, 'strassen', 'mkl');
-    infile = strrep(infile, 'carma', 'mkl');
-    readfile;
-
-    xmatrix_comp = [xaxisvals/1000, xmatrix(:,1)];
-    ymatrix_comp = [yaxisvals, max(ymatrix')'];
+    xmatrix_comp = [xmatrix_all(:,1), xaxisvals/1000];
+    ymatrix_comp = [max([ymatrix_all, yaxisvals]')', yaxisvals];
     max_x = max(max(xmatrix_comp));
     max_y = max([peak, max(max(ymatrix_comp))]);
 
-    plot([xaxisvals/1000, xmatrix(:,1)], [yaxisvals, max(ymatrix')'], 'LineWidth', line_width);
+    fig = figure;
+    plot([0, max(xaxisvals/1000)], [peak, peak], '--', 'Color', peak_color, 'LineWidth', line_width*1.5);
     hold on;
-    plot([0, max(xaxisvals/1000)], [peak, peak], 'Color', peak_color, 'LineWidth', line_width);
+    plt = plot(xmatrix_comp(:,1), ymatrix_comp(:,1), 'r-', 'LineWidth', line_width*1.5);
+    plt = plot(xmatrix_comp(:,2), ymatrix_comp(:,2), 'b-', 'LineWidth', line_width*1.5);
+    plt = plot(xmatrix_comp(:,1), ymatrix_comp(:,1), 'r--', 'LineWidth', line_width*1.5);
     hold off;
-    lh = legend({'MKL', 'Optimal (OpenTuner)', peak_label}, 'Location', 'southeast');
-    legend('boxoff')
+    if show_legends
+        lh = legend({peak_label, frpa_alg_name, 'MKL'}, 'Orientation', 'Horizontal', 'Location', 'NorthOutside');
+        legend('boxoff');
+    end
     xlabel({'',xaxislabel},'fontsize',axis_label_size);
     ylabel(yaxislabel,'fontsize',axis_label_size);
     max_y_plot = y_plot_round*(ceil(max_y/y_plot_round)); % round up to nearest y_plot_round
     axis([0 max_x 0 max_y_plot]);
-    % set(gca,'fontsize',tick_label_size,'xtick',[0:2000:max_x]);
-    set(gca,'fontsize',tick_label_size);
+    set(gca,'fontsize',tick_label_size,'ytick',[0:y_plot_round:max_y_plot]);
     filename = [infilename_orig, '-', 'comparison', '.eps'];
     print(fig,'-depsc',filename);
 
