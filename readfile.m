@@ -22,5 +22,5 @@ interleavings = data{interleaving_i};
 algorithm = data{algorithm_i}(1);
 algorithm = algorithm{1};
 numlines = length(data{1});
-xaxisvals = data{find(strcmp(header, xaxis))};
-yaxisvals = data{find(strcmp(header, yaxis))};
+xaxisvals = data{find(strcmp(header, xaxis_val))};
+yaxisvals = data{find(strcmp(header, yaxis_val))};
