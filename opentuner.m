@@ -1,7 +1,5 @@
 clear;
 
-
-peak = 124.9512;
 y_plot_round = 10;
 
 legend_font_size = 17;
@@ -34,8 +32,9 @@ for infile = infiles
     end
 
     data = csvread(infile);
-    num_cols_to_add = 100 - size(data,2);
+    num_cols_to_add = max([0, 100 - size(data,2)]);
     data = [data, zeros(size(data,1), num_cols_to_add)];
+    data = data(1:100, 1:100);
     data_adjusted = [];
     for i = 1:size(data,1)
         row = data(i,:);
