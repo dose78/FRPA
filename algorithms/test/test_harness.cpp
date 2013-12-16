@@ -14,7 +14,12 @@
 
 int main(int argc, char **argv) {
     int n = atoi(argv[1]);
-    std::string interleaving = argv[2];
+    std::string interleaving;
+    if (argc > 2) {
+        interleaving = argv[2];
+    } else {
+        interleaving = "";
+    }
 
     double *A = (double*) malloc(n * sizeof(double));
     for(int i = 0; i < n; i++) A[i] = 2 * drand48() - 1;

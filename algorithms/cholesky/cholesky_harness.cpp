@@ -10,7 +10,13 @@ void initialize(double *A, double *A2, int n) {
 }
 
 int main(int argc, char **argv) {
-    std::string interleaving = argv[1];
+    std::string interleaving;
+    if (argc > 1) {
+        interleaving = argv[1];
+    } else {
+        interleaving = "";
+    }
+
     FILE *f = fopen("cholesky.csv","a");
     int n = 1024;
 
