@@ -3,7 +3,7 @@
 
 StrassenProblem::StrassenProblem(int m, int k, int n, double *A, int lda, double *B, int ldb, double *C, int ldc) {
     this->m = m, this->n = n, this->k = k;
-    this->A = A, this->B = B, this->C = C
+    this->A = A, this->B = B, this->C = C;
     this->lda = lda, this->ldb = ldb, this->ldc = ldc;
 }
 
