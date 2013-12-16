@@ -22,26 +22,21 @@ std::vector<Task*> CarmaProblem::split() {
     Task* task2 = new Task(1);
     int dim = getDimToSplit();
     if (dim == SPLIT_N) {
-        double *B1 = B;
-        double *B2 = B + n/2*K;
+        double *B1 = B, *B2 = B + n/2*K;
         task1->addProblem(new CarmaProblem(M, K, m, k, n/2, CM, A, B1, C));
         task2->addProblem(new CarmaProblem(M, K, m, k, n/2, CM, A, B2, C + n/2*CM));
     } else if (dim == SPLIT_M) {
-        double *A1 = A;
-        double *A2 = A + m/2;
+        double *A1 = A, *A2 = A + m/2;
         task1->addProblem(new CarmaProblem(M, K, m/2, k, n, CM, A1, B, C));
         task2->addProblem(new CarmaProblem(M, K, m/2, k, n, CM, A2, B, C + m/2));
     } else { // SPLIT_K
-        double *A1 = A;
-        double *A2 = A + k/2*M;
-        double *B1 = B;
-        double *B2 = B + k/2;
+        double *A1 = A, *A2 = A + k/2*M;
+        double *B1 = B, *B2 = B + k/2;
         double *Q1 = (double*) malloc(m * n * sizeof(double));
         memset(Q1, 0, sizeof(double) * m * n);
         task1->addProblem(new CarmaProblem(M, K, m, k/2, n, m, A1, B1, Q1));
         task2->addProblem(new CarmaProblem(M, K, m, k/2, n, CM, A2, B2, C));
     }
-
     std::vector<Task*> tasks (2);
     tasks[0] = task1;
     tasks[1] = task2;
@@ -52,20 +47,16 @@ std::vector<Problem*> CarmaProblem::splitSequential() {
     std::vector<Problem*> subproblems (2);
     int dim = getDimToSplit();
     if (dim == SPLIT_N) {
-        double *B1 = B;
-        double *B2 = B + n/2*K;
+        double *B1 = B, *B2 = B + n/2*K;
         subproblems[0] = new CarmaProblem(M, K, m, k, n/2, CM, A, B1, C);
         subproblems[1] = new CarmaProblem(M, K, m, k, n/2, CM, A, B2, C + n/2*CM);
     } else if (dim == SPLIT_M) {
-        double *A1 = A;
-        double *A2 = A + m/2;
+        double *A1 = A, *A2 = A + m/2;
         subproblems[0] = new CarmaProblem(M, K, m/2, k, n, CM, A1, B, C);
         subproblems[1] = new CarmaProblem(M, K, m/2, k, n, CM, A2, B, C + m/2);
     } else { // SPLIT_K
-        double *A1 = A;
-        double *A2 = A + k/2*M;
-        double *B1 = B;
-        double *B2 = B + k/2;
+        double *A1 = A, *A2 = A + k/2*M;
+        double *B1 = B, *B2 = B + k/2;
         subproblems[0] = new CarmaProblem(M, K, m, k/2, n, CM, A1, B1, C);
         subproblems[1] = new CarmaProblem(M, K, m, k/2, n, CM, A2, B2, C);
     }

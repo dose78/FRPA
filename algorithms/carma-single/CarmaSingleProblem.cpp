@@ -22,26 +22,21 @@ std::vector<Task*> CarmaSingleProblem::split() {
     Task* task2 = new Task(1);
     int dim = getDimToSplit();
     if (dim == SPLIT_N) {
-        float *B1 = B;
-        float *B2 = B + n/2*K;
+        float *B1 = B, *B2 = B + n/2*K;
         task1->addProblem(new CarmaSingleProblem(M, K, m, k, n/2, CM, A, B1, C));
         task2->addProblem(new CarmaSingleProblem(M, K, m, k, n/2, CM, A, B2, C + n/2*CM));
     } else if (dim == SPLIT_M) {
-        float *A1 = A;
-        float *A2 = A + m/2;
+        float *A1 = A, *A2 = A + m/2;
         task1->addProblem(new CarmaSingleProblem(M, K, m/2, k, n, CM, A1, B, C));
         task2->addProblem(new CarmaSingleProblem(M, K, m/2, k, n, CM, A2, B, C + m/2));
     } else { // SPLIT_K
-        float *A1 = A;
-        float *A2 = A + k/2*M;
-        float *B1 = B;
-        float *B2 = B + k/2;
+        float *A1 = A, *A2 = A + k/2*M;
+        float *B1 = B, *B2 = B + k/2;
         float *Q1 = (float*) malloc(m * n * sizeof(float));
         memset(Q1, 0, sizeof(float) * m * n);
         task1->addProblem(new CarmaSingleProblem(M, K, m, k/2, n, m, A1, B1, Q1));
         task2->addProblem(new CarmaSingleProblem(M, K, m, k/2, n, CM, A2, B2, C));
     }
-
     std::vector<Task*> tasks (2);
     tasks[0] = task1;
     tasks[1] = task2;
@@ -52,20 +47,16 @@ std::vector<Problem*> CarmaSingleProblem::splitSequential() {
     std::vector<Problem*> subproblems (2);
     int dim = getDimToSplit();
     if (dim == SPLIT_N) {
-        float *B1 = B;
-        float *B2 = B + n/2*K;
+        float *B1 = B, *B2 = B + n/2*K;
         subproblems[0] = new CarmaSingleProblem(M, K, m, k, n/2, CM, A, B1, C);
         subproblems[1] = new CarmaSingleProblem(M, K, m, k, n/2, CM, A, B2, C + n/2*CM);
     } else if (dim == SPLIT_M) {
-        float *A1 = A;
-        float *A2 = A + m/2;
+        float *A1 = A, *A2 = A + m/2;
         subproblems[0] = new CarmaSingleProblem(M, K, m/2, k, n, CM, A1, B, C);
         subproblems[1] = new CarmaSingleProblem(M, K, m/2, k, n, CM, A2, B, C + m/2);
     } else { // SPLIT_K
-        float *A1 = A;
-        float *A2 = A + k/2*M;
-        float *B1 = B;
-        float *B2 = B + k/2;
+        float *A1 = A, *A2 = A + k/2*M;
+        float *B1 = B, *B2 = B + k/2;
         subproblems[0] = new CarmaSingleProblem(M, K, m, k/2, n, CM, A1, B1, C);
         subproblems[1] = new CarmaSingleProblem(M, K, m, k/2, n, CM, A2, B2, C);
     }

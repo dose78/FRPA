@@ -2,15 +2,9 @@
 #include "memorytracking.h"
 
 StrassenProblem::StrassenProblem(int m, int k, int n, double *A, int lda, double *B, int ldb, double *C, int ldc) {
-    this->m = m;
-    this->n = n;
-    this->k = k;
-    this->A = A;
-    this->lda = lda;
-    this->B = B;
-    this->ldb = ldb;
-    this->C = C;
-    this->ldc = ldc;
+    this->m = m, this->n = n, this->k = k;
+    this->A = A, this->B = B, this->C = C
+    this->lda = lda, this->ldb = ldb, this->ldc = ldc;
 }
 
 void StrassenProblem::runBaseCase() {
@@ -18,10 +12,7 @@ void StrassenProblem::runBaseCase() {
 }
 
 std::vector<Task*> StrassenProblem::split() {
-    int T_m = m/2;
-    int T_n = k/2;
-    int S_m = k/2;
-    int S_n = n/2;
+    int T_m = m/2, T_n = k/2, S_m = k/2, S_n = n/2;
 
     double *A11 = A;
     double *A21 = A + m/2;
