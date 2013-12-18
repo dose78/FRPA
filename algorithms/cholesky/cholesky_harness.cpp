@@ -54,6 +54,7 @@ int main(int argc, char **argv) {
         }
         // printf("A = %f | A2 = %f\n", A[i], A2[i]);
     }
+    printf("test passed\n");
 
     free(A);
     free(A2);
