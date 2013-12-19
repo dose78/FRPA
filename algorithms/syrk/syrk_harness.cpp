@@ -42,17 +42,13 @@ int main(int argc, char **argv) {
 
     // Correctness
     cblas_dsyrk(CblasColMajor, CblasLower, CblasNoTrans, n, n, -1.0, A2, n, 1.0, C2, n);
-    // char *Lc = "L";
-    // char *Nc = "N";
-    // const double one = 1.0;
-    // const double negone = -1.0;
-    // dsyrk(Lc, Nc, &n, &n, &negone, A2, &n, &one, C2, &n);
     for(int i = 0; i < n*n; i++) {
         if ((fabs(C[i] - C2[i]) / C[i]) > .0000000001) {
             printf("ERROR: %f\n", fabs((C[i] - C2[i]) / C[i]));
             exit(EXIT_FAILURE);
         }
     }
+    printf("test passed\n");
     free(C);
     free(A);
     free(C2);

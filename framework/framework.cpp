@@ -77,11 +77,13 @@ void Framework::solve(Problem* problem, int depth) {
     deleteSubproblems(subproblems);
 
     // Memory Tracking
-    // if (depth == 0) {
-    //     #ifdef DEBUG
-    //         Memory::printAll();
-    //     #endif
-    // }
+    if (depth == 0) {
+        #ifdef DEBUG
+            #ifndef TERSE
+                Memory::printAll();
+            #endif
+        #endif
+    }
 }
 
 void Framework::solve(Problem* problem, std::string interleaving) {
