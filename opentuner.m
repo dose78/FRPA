@@ -59,7 +59,7 @@ for infile = infiles
     plot(Xs, Ys, 'b', 'LineWidth', line_width);
     errorbar(Xs, Ys, Ys - first_quart, third_quart - Ys);
 
-    xlabel({'','Iteration'},'fontsize',axis_label_size);
+    xlabel({'','Tuning Iteration'},'fontsize',axis_label_size);
     ylabel(yaxis_label,'fontsize',axis_label_size);
 
     lh = legend({'Maximum Achievable Performance', 'Average Cumulative Performance'}, 'Location', 'southeast');
