@@ -4,10 +4,10 @@ clear;
 infiles = {};
 
 folder = 'data/strassen';
-infiles{end+1} = 'strassen-double-emerald.csv';
+infiles{end+1} = 'strassen-single-boxboro.csv';
 infiles{end+1} = 'strassen-double-boxboro.csv';
 infiles{end+1} = 'strassen-single-emerald.csv';
-infiles{end+1} = 'strassen-single-boxboro.csv';
+infiles{end+1} = 'strassen-double-emerald.csv';
 
 show_legends = true;
 
@@ -20,7 +20,6 @@ yaxis_val = 'max'; % max, avg, median, or min
 carma_interleavings = {'BBBBBB', 'BBBBBDB', 'BBBDBBB', 'BBBDDBBB', 'BBDBDBDBB', 'BDBDBDBDBDB', 'BBBBBBB', 'BBBDBBBB', 'BBBBDBBB', 'BBBDBDBBB', 'BBDBBBDBB', 'BBBBBBDDB'};
 
 % GOOD:
-% strassen_interleavings = {};
 strassen_interleavings = {'BB', 'DBB', 'BDB', 'BDBD', 'BBB', 'DBBB', 'BDBB', 'BDBDB'};
 
 
@@ -169,10 +168,13 @@ for infile = infiles
     plot(xaxis, y_ot, 'r-', 'LineWidth', line_width*1.5);
     legend_labels = {peak_label, frpa_alg_name, 'MKL'};
     if not(isempty(strfind(infilename_orig,'carma')))
-        plot(xaxis, yaxes('BBBBB')', 'r--', 'LineWidth', line_width*1.5);
-        legend_labels = {peak_label, frpa_alg_name, 'Original CARMA', 'MKL'};
+        if not(isempty(strfind(infilename_orig,'emerald')))
+            plot(xaxis, yaxes('BBBBB')', 'r--', 'LineWidth', line_width*1.5);
+            legend_labels = {peak_label, frpa_alg_name, 'Original CARMA', 'MKL'};
+        end
     end
     plot(xaxis, y_mkl, 'b-', 'LineWidth', line_width*1.5);
+    plot(xaxis, y_ot, 'r--', 'LineWidth', line_width*1.5);
     hold off;
     if show_legends
         lh = legend(legend_labels, 'Orientation', 'Horizontal', 'Location', 'NorthOutside');
