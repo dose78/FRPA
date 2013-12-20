@@ -86,7 +86,7 @@ for infile = infiles
         frpa_alg_name = 'FRPA Strassen';
         colororder = [0,0,1; 1,0,0; 0,.75,.75; .75,0,.75];
     else
-        xaxislabel = 'Middle Dimension (k, thousands)';
+        xaxislabel = 'Middle Dimension k (m = n) (thousands)';
         yaxislabel = 'GFlops';
         peak_label = 'Effective Peak';
         interleavings_plot = carma_interleavings;
