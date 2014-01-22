@@ -1,5 +1,6 @@
-[pathstr,infilename,ext] = fileparts(infile);
-fileID = fopen(infile,'r');
+infile2 = strcat(folder, '/', infile);
+[pathstr,infilename,ext] = fileparts(infile2);
+fileID = fopen(infile2,'r');
 header = textscan(fileID, '%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,\n]', 1);
 header = [header{:}];
 data = textscan(fileID, '%s%f%f%f%s%f%f%f%f%f%f%*[^\n]', 'Delimiter', ',', 'headerLines', 1);
@@ -21,5 +22,5 @@ interleavings = data{interleaving_i};
 algorithm = data{algorithm_i}(1);
 algorithm = algorithm{1};
 numlines = length(data{1});
-xaxisvals = data{find(strcmp(header, xaxis))};
-yaxisvals = data{find(strcmp(header, yaxis))};
+xaxisvals = data{find(strcmp(header, xaxis_val))};
+yaxisvals = data{find(strcmp(header, yaxis_val))};

@@ -25,7 +25,13 @@ int cmp_harness(const void *x, const void *y) {
 int main(int argc, char **argv) {
     srand48(time(NULL));
 
-    std::string interleaving = argv[1];
+    std::string interleaving;
+    if (argc > 1) {
+        interleaving = argv[1];
+    } else {
+        interleaving = "";
+    }
+
     FILE *f = fopen("quicksort.csv","w");
     fprintf(f,"length,quicksort,built in,ratio\n");
     printf("length\tquicksort\tbuilt in\tratio\n");

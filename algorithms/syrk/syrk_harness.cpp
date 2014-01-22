@@ -9,7 +9,13 @@ void initialize(double *C, double *A, double *C2, double *A2, int n) {
 }
 
 int main(int argc, char **argv) {
-    std::string interleaving = argv[1];
+    std::string interleaving;
+    if (argc > 1) {
+        interleaving = argv[1];
+    } else {
+        interleaving = "";
+    }
+
     FILE *f = fopen("syrk.csv","a");
     int n = 1024;
 
@@ -36,17 +42,13 @@ int main(int argc, char **argv) {
 
     // Correctness
     cblas_dsyrk(CblasColMajor, CblasLower, CblasNoTrans, n, n, -1.0, A2, n, 1.0, C2, n);
-    // char *Lc = "L";
-    // char *Nc = "N";
-    // const double one = 1.0;
-    // const double negone = -1.0;
-    // dsyrk(Lc, Nc, &n, &n, &negone, A2, &n, &one, C2, &n);
     for(int i = 0; i < n*n; i++) {
         if ((fabs(C[i] - C2[i]) / C[i]) > .0000000001) {
             printf("ERROR: %f\n", fabs((C[i] - C2[i]) / C[i]));
             exit(EXIT_FAILURE);
         }
     }
+    printf("test passed\n");
     free(C);
     free(A);
     free(C2);

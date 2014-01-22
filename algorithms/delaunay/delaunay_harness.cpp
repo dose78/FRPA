@@ -3,7 +3,12 @@
 #include "DelaunayProblem.h"
 
 int main(int argc, char **argv) {
-  std::string interleaving = argv[1];
+  std::string interleaving;
+  if (argc > 1) {
+      interleaving = argv[1];
+  } else {
+      interleaving = "";
+  }
 
   for( int n = 1000; n <= 10000000; n *= 10 ) {
 

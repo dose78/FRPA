@@ -70,7 +70,12 @@ int main(int argc, char **argv) {
     int m = atoi(argv[1]);
     int k = atoi(argv[2]);
     int n = atoi(argv[3]);
-    std::string interleaving = argv[4];
+    std::string interleaving;
+    if (argc > 4) {
+        interleaving = argv[4];
+    } else {
+        interleaving = "";
+    }
 
     FILE *f = fopen("carma-double.csv","a");
 

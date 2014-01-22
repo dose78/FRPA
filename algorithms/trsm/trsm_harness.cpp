@@ -9,7 +9,13 @@ void initialize(int n, double *X, double *T, double *X_test, double *T_test) {
 }
 
 int main(int argc, char **argv) {
-    std::string interleaving = argv[1];
+    std::string interleaving;
+    if (argc > 1) {
+        interleaving = argv[1];
+    } else {
+        interleaving = "";
+    }
+
     FILE *f = fopen("trsm.csv","a");
 
     for(int n = 64; n <= 16384; n *= 2) {
