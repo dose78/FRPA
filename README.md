@@ -1,3 +1,5 @@
+### FRPA: A Framework for Recursive Parallel Algorithms
+
 ### Usage
 ```
 bash run.sh <alg>
@@ -10,7 +12,7 @@ bash run.sh carma
 bash run.sh mergesort
 ```
 
-### Making your own CARDIO algorithm
+### Making your own FRPA algorithm
 *  Add your algorithm, which implements the proper methods (see QuicksortProblem.cpp for a simple example)
 *  Add a running/testing harness for your algorithm (see quicksort_harness.cpp for a simple example)
 *  Add a case in run.sh that will compile your algorithm (see run.sh for existing examples)

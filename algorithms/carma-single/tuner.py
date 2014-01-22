@@ -15,9 +15,9 @@ parser.add_argument('--k', type=int, default=1024, help='k dimension of matrix')
 parser.add_argument('--n', type=int, default=1024, help='n dimension of matrix')
 parser.add_argument('--out_file', type=str, default='opentuner.csv', help='output file')
 
-class CardioTuner(MeasurementInterface):
+class FRPATuner(MeasurementInterface):
     def __init__(self, args):
-        super(CardioTuner, self).__init__(args)
+        super(FRPATuner, self).__init__(args)
         self.MAX_DEPTH = args.max_depth
         self.m = args.m
         self.k = args.k
@@ -64,4 +64,4 @@ class CardioTuner(MeasurementInterface):
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    CardioTuner.main(args)
+    FRPATuner.main(args)
