@@ -16,11 +16,15 @@ fi
 
 FLAGS="-O3 -mkl -ipo -xHOST -no-prec-div -fno-strict-aliasing -fno-omit-frame-pointer"
 FRAMEWORK="framework/framework.cpp framework/Task.cpp framework/Problem.cpp framework/memory.cpp"
+icc $FLAGS -I framework -o harness algorithms/strassen-single/*.cpp $FRAMEWORK
+dim=4096
 
-# STRASSEN
-icc $FLAGS -I framework -o harness algorithms/strassen/*.cpp $FRAMEWORK
-dim=1024
-$otpython algorithms/strassen/strassen_tuner.py --test-limit 10 --max_depth 5 --m $dim --k $dim --n $dim
+outfile='opentuner-strassen-emerald-single-'$dim'.csv'
+for (( i=1; i<=100; i+=1 )); do
+    rm -rf opentuner.db opentuner.log
+    $otpython algorithms/strassen-single/tuner.py --test-limit 100 --max_depth 10 --m $dim --k $dim --n $dim --out_file $outfile
+    echo "" >> $outfile
+done
 
 rm -rf harness
 echo -e "\e[01;32mTuning took" $SECONDS "seconds\e[0m"

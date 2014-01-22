@@ -38,11 +38,11 @@ int main(int argc, char **argv) {
     }
 
     #ifdef DEBUG
-        fprintf(f,"CARMA,%d,%d,%d,%s,%f,%ld,%ld\n", m, k, n, interleaving.c_str(), Gflop_s, Memory::getMax(), Memory::getTotal());
-        printf("CARMA,%d,%d,%d,%s,%f,%ld,%ld\n", m, k, n, interleaving.c_str(), Gflop_s, Memory::getMax(), Memory::getTotal());
+        fprintf(f,"CARMA-DOUBLE,%d,%d,%d,%s,%f,%ld,%ld\n", m, k, n, interleaving.c_str(), Gflop_s, Memory::getMax(), Memory::getTotal());
+        printf("CARMA-DOUBLE,%d,%d,%d,%s,%f,%ld,%ld\n", m, k, n, interleaving.c_str(), Gflop_s, Memory::getMax(), Memory::getTotal());
     #else
-        fprintf(f,"CARMA,%d,%d,%d,%s,%f\n", m, k, n, interleaving.c_str(), Gflop_s);
-        printf("CARMA,%d,%d,%d,%s,%f\n", m, k, n, interleaving.c_str(), Gflop_s);
+        fprintf(f,"CARMA-DOUBLE,%d,%d,%d,%s,%f\n", m, k, n, interleaving.c_str(), Gflop_s);
+        printf("CARMA-DOUBLE,%d,%d,%d,%s,%f\n", m, k, n, interleaving.c_str(), Gflop_s);
     #endif
 
     // Housekeeping

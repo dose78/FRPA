@@ -13,6 +13,7 @@ parser.add_argument('--max_depth', type=int, default=10, help='max depth of deci
 parser.add_argument('--m', type=int, default=1024, help='m dimension of matrix')
 parser.add_argument('--k', type=int, default=1024, help='k dimension of matrix')
 parser.add_argument('--n', type=int, default=1024, help='n dimension of matrix')
+parser.add_argument('--out_file', type=str, default='opentuner.csv', help='output file')
 
 class CardioTuner(MeasurementInterface):
     def __init__(self, args):
@@ -21,6 +22,7 @@ class CardioTuner(MeasurementInterface):
         self.m = args.m
         self.k = args.k
         self.n = args.n
+        self.outfile = args.out_file
         print "size: " + str(self.m) + "," + str(self.k) + "," + str(self.n)
 
     def run(self, desired_result, input, limit):
@@ -33,10 +35,18 @@ class CardioTuner(MeasurementInterface):
                 interleaving += 'D'
 
         run_command = " ".join(['./harness', str(self.m), str(self.k), str(self.n), interleaving])
+        run_command = run_command + "; " + run_command + "; " + run_command
         result = self.call_program(run_command)
         stdout = result['stdout']
-        gflops = float(stdout.split(',')[-1])
+        lines = stdout.split('\n')
+        gflops = 0
+        for line in lines:
+            if len(line) > 1:
+                gflops += float(line.split(',')[-1])
+        gflops = gflops/3
         print interleaving + ": " + str(gflops) + " gflops"
+        with open(self.outfile, 'a') as file:
+            file.write(str(gflops) + ",")
         return opentuner.resultsdb.models.Result(time=(-1*gflops))
 
     def manipulator(self):
